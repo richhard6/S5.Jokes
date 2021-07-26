@@ -1,3 +1,14 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,10 +45,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
+};
 var button = document.querySelector('.getJoke');
 var containerJoke = document.querySelector('.containerjoke');
+var pointsButtonContainer = document.querySelector('.pointsButtons');
 var title = document.querySelector('.titlejoke');
 button === null || button === void 0 ? void 0 : button.addEventListener('click', printRandomJoke);
+var reportedJokes = [];
 function fetchRandomJoke() {
     var URL = 'https://icanhazdadjoke.com';
     var options = {
@@ -51,16 +69,32 @@ function fetchRandomJoke() {
         .then(function (data) { return data; });
     return jokes;
 }
+var points = 1;
 function printRandomJoke() {
     return __awaiter(this, void 0, void 0, function () {
-        var jokeObj, id, joke, checkIfJoke, jokeInDOM, textJoke;
+        var jokeObj, id, joke, jokeReport, setPoint, checkIfJoke, jokeInDOM, textJoke;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, fetchRandomJoke()];
                 case 1:
                     jokeObj = _a.sent();
                     id = jokeObj.id, joke = jokeObj.joke;
-                    checkIfJoke = containerJoke === null || containerJoke === void 0 ? void 0 : containerJoke.children[1];
+                    jokeReport = {
+                        joke: joke,
+                        date: Date.now(),
+                        points: points
+                    };
+                    setPoint = ['1', '2', '3'];
+                    if (!(pointsButtonContainer === null || pointsButtonContainer === void 0 ? void 0 : pointsButtonContainer.children.length)) {
+                        setPoint.forEach(function (point) {
+                            var pointsButton = document.createElement('button');
+                            pointsButton.textContent = point;
+                            pointsButton.setAttribute('value', point);
+                            pointsButton.addEventListener('click', function (e) { return setPoints(e, jokeReport); });
+                            pointsButtonContainer === null || pointsButtonContainer === void 0 ? void 0 : pointsButtonContainer.appendChild(pointsButton);
+                        });
+                    }
+                    checkIfJoke = containerJoke === null || containerJoke === void 0 ? void 0 : containerJoke.children[2];
                     jokeInDOM = document.createElement('p');
                     textJoke = document.createTextNode(id + "     " + joke);
                     jokeInDOM.appendChild(textJoke);
@@ -80,4 +114,12 @@ function printRandomJoke() {
             }
         });
     });
+}
+function setPoints(e, jokeReport) {
+    // se
+    var realReport = __assign(__assign({}, jokeReport), { points: e.target.value }); // si le doy varias veces a un boton se añaden tantas veces en el reportedArray
+    generateReport(realReport);
+}
+function generateReport(joke) {
+    reportedJokes = __spreadArray(__spreadArray([], reportedJokes), [joke]);
 }
