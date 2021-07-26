@@ -13,7 +13,13 @@ interface IJoke {
   status: number
 }
 
-let reportedJokes: Object[] = []
+interface IReport {
+  joke: String
+  date: Number
+  points: Number
+}
+
+let reportedJokes: IReport[] = []
 
 function fetchRandomJoke(): Promise<IJoke> {
   const URL: string = 'https://icanhazdadjoke.com'
@@ -32,21 +38,15 @@ function fetchRandomJoke(): Promise<IJoke> {
   return jokes
 }
 
-let points = 1
-
 async function printRandomJoke(): Promise<void> {
   const jokeObj = await fetchRandomJoke()
-  interface IReport {
-    joke: String
-    date: Number
-    points: Number
-  }
+
   const { id, joke } = jokeObj
 
   const jokeReport: IReport = {
     joke: joke,
     date: Date.now(),
-    points: points,
+    points: 1,
   }
 
   let setPoint: string[] = ['1', '2', '3']
@@ -80,16 +80,35 @@ async function printRandomJoke(): Promise<void> {
   }
 }
 
-function setPoints(e: Event, jokeReport: Object): void {
+function setPoints(e: Event, jokeReported: IReport): void {
+  console.log(jokeReported) // hasta el momento de  linea 50 se actualiza el Joke report, a partir de aqui, siempre es el primer joke que hay
   // se
-  const realReport: Object = {
-    ...jokeReport,
-    points: (<HTMLButtonElement>e.target).value,
+
+  const realReport: IReport = {
+    ...jokeReported,
+    points: parseInt((<HTMLButtonElement>e.target).value),
   } // si le doy varias veces a un boton se añaden tantas veces en el reportedArray
 
   generateReport(realReport)
 }
 
-function generateReport(joke: Object): void {
-  reportedJokes = [...reportedJokes, joke]
+function generateReport(joke: IReport): void {
+  const found: any = reportedJokes.find(
+    (evaluatedJoke) => evaluatedJoke.joke === joke.joke
+  )
+
+  console.log(found)
+
+  const flag: number = reportedJokes.indexOf(found)
+
+  if (!found) {
+    reportedJokes = [...reportedJokes, joke]
+    console.log(2)
+  } else {
+    let edited = { ...found, points: joke.points }
+    console.log(edited) // hay un bug demasiado raro aqui...
+    let restJokes = reportedJokes.slice(flag + 1, reportedJokes.length)
+    restJokes = [edited, ...restJokes]
+    reportedJokes = [...reportedJokes.slice(0, flag), ...restJokes]
+  }
 }

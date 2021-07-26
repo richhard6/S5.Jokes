@@ -69,7 +69,6 @@ function fetchRandomJoke() {
         .then(function (data) { return data; });
     return jokes;
 }
-var points = 1;
 function printRandomJoke() {
     return __awaiter(this, void 0, void 0, function () {
         var jokeObj, id, joke, jokeReport, setPoint, checkIfJoke, jokeInDOM, textJoke;
@@ -82,7 +81,7 @@ function printRandomJoke() {
                     jokeReport = {
                         joke: joke,
                         date: Date.now(),
-                        points: points
+                        points: 1
                     };
                     setPoint = ['1', '2', '3'];
                     if (!(pointsButtonContainer === null || pointsButtonContainer === void 0 ? void 0 : pointsButtonContainer.children.length)) {
@@ -115,11 +114,25 @@ function printRandomJoke() {
         });
     });
 }
-function setPoints(e, jokeReport) {
+function setPoints(e, jokeReported) {
+    console.log(jokeReported); // hasta el momento de  linea 50 se actualiza el Joke report, a partir de aqui, siempre es el primer joke que hay
     // se
-    var realReport = __assign(__assign({}, jokeReport), { points: e.target.value }); // si le doy varias veces a un boton se añaden tantas veces en el reportedArray
+    var realReport = __assign(__assign({}, jokeReported), { points: parseInt(e.target.value) }); // si le doy varias veces a un boton se añaden tantas veces en el reportedArray
     generateReport(realReport);
 }
 function generateReport(joke) {
-    reportedJokes = __spreadArray(__spreadArray([], reportedJokes), [joke]);
+    var found = reportedJokes.find(function (evaluatedJoke) { return evaluatedJoke.joke === joke.joke; });
+    console.log(found);
+    var flag = reportedJokes.indexOf(found);
+    if (!found) {
+        reportedJokes = __spreadArray(__spreadArray([], reportedJokes), [joke]);
+        console.log(2);
+    }
+    else {
+        var edited = __assign(__assign({}, found), { points: joke.points });
+        console.log(edited); // hay un bug demasiado raro aqui...
+        var restJokes = reportedJokes.slice(flag + 1, reportedJokes.length);
+        restJokes = __spreadArray([edited], restJokes);
+        reportedJokes = __spreadArray(__spreadArray([], reportedJokes.slice(0, flag)), restJokes);
+    }
 }
