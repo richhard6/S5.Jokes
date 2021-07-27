@@ -18,6 +18,7 @@ function fetchCurrentWeather() {
         const currentWeather = fetch('http://api.openweathermap.org/data/2.5/weather?q=barcelona&appid=fedca1624d38dda6a9594d7e3a842cc0&units=metric')
             .then((res) => res.json())
             .then((data) => data);
+        console.log(typeof currentWeather);
         return currentWeather;
     });
 }
@@ -104,10 +105,13 @@ function generateReport(joke) {
     }
     console.log(reportedJokes);
 }
-const printCurrentWeather = (currentWeather) => __awaiter(void 0, void 0, void 0, function* () {
-    const clima = yield currentWeather;
-    const { main, name, weather, } = clima;
-    /*  const { main, name, weather } = clima */
-    console.log(clima);
-});
+function printCurrentWeather(currentWeather) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const clima = yield currentWeather;
+        const { main, name, weather } = clima;
+        console.log(main, name, weather);
+        /*  const { main, name, weather } = clima */
+        const { feels_like, temp, temp_max, temp_min, } = main;
+    });
+}
 printCurrentWeather(fetchCurrentWeather());

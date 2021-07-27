@@ -17,14 +17,31 @@ interface IReport {
   points: Number
 }
 
+interface IClimate {
+  base: String
+  clouds: Object
+  cod: Number
+  coord: Object
+  dt: Number
+  id: Number
+  main: Object
+  name: string
+  sys: Object
+  timezone: Number
+  weather: Array<Object>
+  wind: Object
+}
+
 let reportedJokes: IReport[] = []
 
-async function fetchCurrentWeather(): Promise<Object> {
-  const currentWeather: Object = fetch(
+async function fetchCurrentWeather(): Promise<IClimate> {
+  const currentWeather: Promise<IClimate> = fetch(
     'http://api.openweathermap.org/data/2.5/weather?q=barcelona&appid=fedca1624d38dda6a9594d7e3a842cc0&units=metric'
   )
     .then((res) => res.json())
     .then((data) => data)
+
+  console.log(typeof currentWeather)
 
   return currentWeather
 }
@@ -145,19 +162,21 @@ interface IWeather {
   weather: Array<Object>
 }
 
-const printCurrentWeather = async (
-  currentWeather: Promise<Object>
-): Promise<void> => {
-  const clima: IWeather = await currentWeather
+async function printCurrentWeather(currentWeather: Promise<IClimate>) {
+  const clima: IClimate = await currentWeather
 
-  const {
-    main,
-    name,
-    weather,
-  }: { main: Object; name: string; weather: Array<Object> } = clima
+  const { main, name, weather } = clima
+
+  console.log(main, name, weather)
   /*  const { main, name, weather } = clima */
 
-  console.log(clima)
+  const {
+    feels_like,
+    temp,
+    temp_max,
+    temp_min,
+  }: { feels_like: Number; temp: Number; temp_max: Number; temp_min: Number } =
+    main
 }
 
 printCurrentWeather(fetchCurrentWeather())
