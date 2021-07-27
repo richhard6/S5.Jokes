@@ -1,14 +1,4 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -18,121 +8,78 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
-};
-var button = document.querySelector('.getJoke');
-var containerJoke = document.querySelector('.containerjoke');
-var pointsButtonContainer = document.querySelector('.pointsButtons');
-var title = document.querySelector('.titlejoke');
+const button = document.querySelector('.getJoke');
+const containerJoke = document.querySelector('.containerjoke');
+const pointsButtonContainer = document.querySelector('.pointsButtons');
+const title = document.querySelector('.titlejoke');
 button === null || button === void 0 ? void 0 : button.addEventListener('click', printRandomJoke);
-var reportedJokes = [];
+let reportedJokes = [];
 function fetchRandomJoke() {
-    var URL = 'https://icanhazdadjoke.com';
-    var options = {
+    const URL = 'https://icanhazdadjoke.com';
+    const options = {
         method: 'GET',
         headers: {
-            Accept: 'application/json'
-        }
+            Accept: 'application/json',
+        },
     };
-    var jokes = fetch(URL, options)
-        .then(function (res) { return res.json(); })
-        .then(function (data) { return data; });
+    const jokes = fetch(URL, options)
+        .then((res) => res.json())
+        .then((data) => data);
     return jokes;
 }
 function printRandomJoke() {
-    return __awaiter(this, void 0, void 0, function () {
-        var jokeObj, id, joke, jokeReport, setPoint, checkIfJoke, jokeInDOM, textJoke;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, fetchRandomJoke()];
-                case 1:
-                    jokeObj = _a.sent();
-                    id = jokeObj.id, joke = jokeObj.joke;
-                    jokeReport = {
-                        joke: joke,
-                        date: Date.now(),
-                        points: 1
-                    };
-                    setPoint = ['1', '2', '3'];
-                    if (!(pointsButtonContainer === null || pointsButtonContainer === void 0 ? void 0 : pointsButtonContainer.children.length)) {
-                        setPoint.forEach(function (point) {
-                            var pointsButton = document.createElement('button');
-                            pointsButton.textContent = point;
-                            pointsButton.setAttribute('value', point);
-                            pointsButton.addEventListener('click', function (e) { return setPoints(e, jokeReport); });
-                            pointsButtonContainer === null || pointsButtonContainer === void 0 ? void 0 : pointsButtonContainer.appendChild(pointsButton);
-                        });
-                    }
-                    checkIfJoke = containerJoke === null || containerJoke === void 0 ? void 0 : containerJoke.children[2];
-                    jokeInDOM = document.createElement('p');
-                    textJoke = document.createTextNode(id + "     " + joke);
-                    jokeInDOM.appendChild(textJoke);
-                    console.dir(checkIfJoke === null || checkIfJoke === void 0 ? void 0 : checkIfJoke.tagName);
-                    if ((checkIfJoke === null || checkIfJoke === void 0 ? void 0 : checkIfJoke.tagName) === 'BUTTON') {
-                        if (button)
-                            button.textContent = 'next';
-                        if (title)
-                            title.textContent = 'Haha';
-                        button === null || button === void 0 ? void 0 : button.insertAdjacentElement('beforebegin', jokeInDOM);
-                    }
-                    else {
-                        if (checkIfJoke)
-                            containerJoke === null || containerJoke === void 0 ? void 0 : containerJoke.replaceChild(jokeInDOM, checkIfJoke);
-                    }
-                    return [2 /*return*/];
-            }
+    return __awaiter(this, void 0, void 0, function* () {
+        const jokeObj = yield fetchRandomJoke();
+        const { id, joke } = jokeObj;
+        const jokeReport = {
+            joke: joke,
+            date: Date.now(),
+            points: 1,
+        };
+        let setPoint = ['1', '2', '3'];
+        const allButtons = document.querySelectorAll('button[data-type="points"]');
+        allButtons.forEach((button) => pointsButtonContainer === null || pointsButtonContainer === void 0 ? void 0 : pointsButtonContainer.removeChild(button));
+        setPoint.forEach((point) => {
+            let pointsButton = document.createElement('button');
+            pointsButton.textContent = point;
+            pointsButton.setAttribute('value', point);
+            pointsButton.setAttribute('data-type', 'points');
+            pointsButton.addEventListener('click', (e) => setPoints(e, jokeReport));
+            pointsButtonContainer === null || pointsButtonContainer === void 0 ? void 0 : pointsButtonContainer.appendChild(pointsButton);
         });
+        const checkIfJoke = containerJoke === null || containerJoke === void 0 ? void 0 : containerJoke.children[2];
+        const jokeInDOM = document.createElement('p');
+        const textJoke = document.createTextNode(`${id}     ${joke}`);
+        jokeInDOM.appendChild(textJoke);
+        if ((checkIfJoke === null || checkIfJoke === void 0 ? void 0 : checkIfJoke.tagName) === 'BUTTON') {
+            if (button)
+                button.textContent = 'next';
+            if (title)
+                title.textContent = 'Haha';
+            button === null || button === void 0 ? void 0 : button.insertAdjacentElement('beforebegin', jokeInDOM);
+        }
+        else {
+            if (checkIfJoke)
+                containerJoke === null || containerJoke === void 0 ? void 0 : containerJoke.replaceChild(jokeInDOM, checkIfJoke);
+        }
     });
 }
 function setPoints(e, jokeReported) {
-    console.log(jokeReported); // hasta el momento de  linea 50 se actualiza el Joke report, a partir de aqui, siempre es el primer joke que hay
-    // se
-    var realReport = __assign(__assign({}, jokeReported), { points: parseInt(e.target.value) }); // si le doy varias veces a un boton se añaden tantas veces en el reportedArray
+    let realReport = Object.assign(Object.assign({}, jokeReported), { points: parseInt(e.target.value) });
     generateReport(realReport);
 }
 function generateReport(joke) {
-    var found = reportedJokes.find(function (evaluatedJoke) { return evaluatedJoke.joke === joke.joke; });
-    console.log(found);
-    var flag = reportedJokes.indexOf(found);
+    const found = reportedJokes.find((evaluatedJoke) => evaluatedJoke.joke === joke.joke);
+    const flag = reportedJokes.indexOf(found);
     if (!found) {
-        reportedJokes = __spreadArray(__spreadArray([], reportedJokes), [joke]);
+        reportedJokes = [...reportedJokes, joke];
         console.log(2);
     }
     else {
-        var edited = __assign(__assign({}, found), { points: joke.points });
-        console.log(edited); // hay un bug demasiado raro aqui...
-        var restJokes = reportedJokes.slice(flag + 1, reportedJokes.length);
-        restJokes = __spreadArray([edited], restJokes);
-        reportedJokes = __spreadArray(__spreadArray([], reportedJokes.slice(0, flag)), restJokes);
+        let edited = Object.assign(Object.assign({}, found), { points: joke.points });
+        let restJokes = reportedJokes.slice(flag + 1, reportedJokes.length);
+        restJokes = [edited, ...restJokes];
+        reportedJokes = [...reportedJokes.slice(0, flag), ...restJokes];
     }
+    console.log(reportedJokes);
 }

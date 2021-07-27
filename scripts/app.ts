@@ -39,7 +39,7 @@ function fetchRandomJoke(): Promise<IJoke> {
 }
 
 async function printRandomJoke(): Promise<void> {
-  const jokeObj = await fetchRandomJoke()
+  const jokeObj: IJoke = await fetchRandomJoke()
 
   const { id, joke } = jokeObj
 
@@ -51,15 +51,22 @@ async function printRandomJoke(): Promise<void> {
 
   let setPoint: string[] = ['1', '2', '3']
 
-  if (!pointsButtonContainer?.children.length) {
-    setPoint.forEach((point) => {
-      let pointsButton: HTMLButtonElement = document.createElement('button')
-      pointsButton.textContent = point
-      pointsButton.setAttribute('value', point)
-      pointsButton.addEventListener('click', (e) => setPoints(e, jokeReport))
-      pointsButtonContainer?.appendChild(pointsButton)
-    })
-  }
+  const allButtons: NodeList = document.querySelectorAll(
+    'button[data-type="points"]'
+  )
+
+  allButtons.forEach((button: Node) =>
+    pointsButtonContainer?.removeChild(button)
+  )
+
+  setPoint.forEach((point: string) => {
+    let pointsButton: HTMLButtonElement = document.createElement('button')
+    pointsButton.textContent = point
+    pointsButton.setAttribute('value', point)
+    pointsButton.setAttribute('data-type', 'points')
+    pointsButton.addEventListener('click', (e) => setPoints(e, jokeReport))
+    pointsButtonContainer?.appendChild(pointsButton)
+  })
 
   const checkIfJoke: Element | undefined | null = containerJoke?.children[2]
 
@@ -68,8 +75,6 @@ async function printRandomJoke(): Promise<void> {
   const textJoke: Text = document.createTextNode(`${id}     ${joke}`)
 
   jokeInDOM.appendChild(textJoke)
-
-  console.dir(checkIfJoke?.tagName)
 
   if (checkIfJoke?.tagName === 'BUTTON') {
     if (button) button.textContent = 'next'
@@ -81,13 +86,10 @@ async function printRandomJoke(): Promise<void> {
 }
 
 function setPoints(e: Event, jokeReported: IReport): void {
-  console.log(jokeReported) // hasta el momento de  linea 50 se actualiza el Joke report, a partir de aqui, siempre es el primer joke que hay
-  // se
-
-  const realReport: IReport = {
+  let realReport: IReport = {
     ...jokeReported,
     points: parseInt((<HTMLButtonElement>e.target).value),
-  } // si le doy varias veces a un boton se añaden tantas veces en el reportedArray
+  }
 
   generateReport(realReport)
 }
@@ -97,8 +99,6 @@ function generateReport(joke: IReport): void {
     (evaluatedJoke) => evaluatedJoke.joke === joke.joke
   )
 
-  console.log(found)
-
   const flag: number = reportedJokes.indexOf(found)
 
   if (!found) {
@@ -106,9 +106,11 @@ function generateReport(joke: IReport): void {
     console.log(2)
   } else {
     let edited = { ...found, points: joke.points }
-    console.log(edited) // hay un bug demasiado raro aqui...
+
     let restJokes = reportedJokes.slice(flag + 1, reportedJokes.length)
     restJokes = [edited, ...restJokes]
     reportedJokes = [...reportedJokes.slice(0, flag), ...restJokes]
   }
+
+  console.log(reportedJokes)
 }
