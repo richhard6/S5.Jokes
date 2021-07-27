@@ -9,19 +9,30 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
     />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div
       class="
         tile
         is-ancestor is-flex is-justify-content-center is-align-items-center
+        main-container
       "
     >
-      <div class="tile is-6 is-vertical is-parent">
+      <div class="tile is-6 is-vertical is-parent tileContainer">
         <div class="tile is-parent">
-          <div class="tile is-child box containerjoke">
+          <div
+            class="
+              tile
+              is-child
+              box
+              containerjoke
+              is-flex is-flex-direction-column
+            "
+          >
             <p class="title titlejoke">Ready to get dad jokes?</p>
-            <div class="pointsButtons"></div>
+
+            <div class="joke"></div>
 
             <button class="button is-success getJoke">ready?</button>
           </div>

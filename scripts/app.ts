@@ -1,7 +1,5 @@
 const button = document.querySelector<HTMLButtonElement>('.getJoke')
 const containerJoke = document.querySelector<HTMLDivElement>('.containerjoke')
-const pointsButtonContainer =
-  document.querySelector<HTMLDivElement>('.pointsButtons')
 
 const title = document.querySelector<HTMLParagraphElement>('.titlejoke')
 
@@ -15,11 +13,21 @@ interface IJoke {
 
 interface IReport {
   joke: String
-  date: Number
+  date: String
   points: Number
 }
 
 let reportedJokes: IReport[] = []
+
+async function fetchCurrentWeather(): Promise<Object> {
+  const currentWeather: Object = fetch(
+    'http://api.openweathermap.org/data/2.5/weather?q=barcelona&appid=fedca1624d38dda6a9594d7e3a842cc0&units=metric'
+  )
+    .then((res) => res.json())
+    .then((data) => data)
+
+  return currentWeather
+}
 
 function fetchRandomJoke(): Promise<IJoke> {
   const URL: string = 'https://icanhazdadjoke.com'
@@ -43,45 +51,63 @@ async function printRandomJoke(): Promise<void> {
 
   const { id, joke } = jokeObj
 
+  let today = new Date(Date.now()).toISOString()
+
   const jokeReport: IReport = {
     joke: joke,
-    date: Date.now(),
+    date: today,
     points: 1,
   }
 
   let setPoint: string[] = ['1', '2', '3']
 
-  const allButtons: NodeList = document.querySelectorAll(
-    'button[data-type="points"]'
-  )
+  const buttonContainer: HTMLDivElement = document.createElement('div')
 
-  allButtons.forEach((button: Node) =>
-    pointsButtonContainer?.removeChild(button)
-  )
+  const buttonContainerDOM: HTMLDivElement | null =
+    document.querySelector('.button-container')
 
-  setPoint.forEach((point: string) => {
+  const classesForButtonContainer: string[] = [
+    'button-container',
+    'is-flex',
+    'is-justify-content-center',
+    'is-align-items-center',
+    'mt-3',
+    'mb-3',
+  ]
+
+  buttonContainer?.classList.add(...classesForButtonContainer)
+
+  const classesToAdd: string[] = ['button', 'is-info', 'mb-2', 'mr-2']
+
+  const jokeContainer = document.querySelector<HTMLDivElement>('.joke')
+
+  if (buttonContainerDOM)
+    containerJoke?.replaceChild(buttonContainer, buttonContainerDOM)
+
+  setPoint.map((point: string) => {
     let pointsButton: HTMLButtonElement = document.createElement('button')
     pointsButton.textContent = point
     pointsButton.setAttribute('value', point)
-    pointsButton.setAttribute('data-type', 'points')
+    pointsButton.classList.add(...classesToAdd)
     pointsButton.addEventListener('click', (e) => setPoints(e, jokeReport))
-    pointsButtonContainer?.appendChild(pointsButton)
+    buttonContainer.appendChild(pointsButton)
+    jokeContainer?.insertAdjacentElement('afterend', buttonContainer)
   })
 
-  const checkIfJoke: Element | undefined | null = containerJoke?.children[2]
+  const checkIfJoke: ChildNode | undefined | null = jokeContainer?.firstChild
 
   const jokeInDOM: HTMLParagraphElement = document.createElement('p')
 
-  const textJoke: Text = document.createTextNode(`${id}     ${joke}`)
+  const textJoke: Text = document.createTextNode(joke)
 
   jokeInDOM.appendChild(textJoke)
 
-  if (checkIfJoke?.tagName === 'BUTTON') {
+  if (!jokeContainer?.firstChild) {
     if (button) button.textContent = 'next'
-    if (title) title.textContent = 'Haha'
-    button?.insertAdjacentElement('beforebegin', jokeInDOM)
+    if (title) title.textContent = 'Haha' //maybe a gif here
+    jokeContainer?.appendChild(jokeInDOM)
   } else {
-    if (checkIfJoke) containerJoke?.replaceChild(jokeInDOM, checkIfJoke)
+    if (checkIfJoke) jokeContainer?.replaceChild(jokeInDOM, checkIfJoke)
   }
 }
 
@@ -103,7 +129,6 @@ function generateReport(joke: IReport): void {
 
   if (!found) {
     reportedJokes = [...reportedJokes, joke]
-    console.log(2)
   } else {
     let edited = { ...found, points: joke.points }
 
@@ -114,3 +139,25 @@ function generateReport(joke: IReport): void {
 
   console.log(reportedJokes)
 }
+interface IWeather {
+  main: Object
+  name: string
+  weather: Array<Object>
+}
+
+const printCurrentWeather = async (
+  currentWeather: Promise<Object>
+): Promise<void> => {
+  const clima: IWeather = await currentWeather
+
+  const {
+    main,
+    name,
+    weather,
+  }: { main: Object; name: string; weather: Array<Object> } = clima
+  /*  const { main, name, weather } = clima */
+
+  console.log(clima)
+}
+
+printCurrentWeather(fetchCurrentWeather())

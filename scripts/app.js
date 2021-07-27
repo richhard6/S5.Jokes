@@ -10,10 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const button = document.querySelector('.getJoke');
 const containerJoke = document.querySelector('.containerjoke');
-const pointsButtonContainer = document.querySelector('.pointsButtons');
 const title = document.querySelector('.titlejoke');
 button === null || button === void 0 ? void 0 : button.addEventListener('click', printRandomJoke);
 let reportedJokes = [];
+function fetchCurrentWeather() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const currentWeather = fetch('http://api.openweathermap.org/data/2.5/weather?q=barcelona&appid=fedca1624d38dda6a9594d7e3a842cc0&units=metric')
+            .then((res) => res.json())
+            .then((data) => data);
+        return currentWeather;
+    });
+}
 function fetchRandomJoke() {
     const URL = 'https://icanhazdadjoke.com';
     const options = {
@@ -31,36 +38,51 @@ function printRandomJoke() {
     return __awaiter(this, void 0, void 0, function* () {
         const jokeObj = yield fetchRandomJoke();
         const { id, joke } = jokeObj;
+        let today = new Date(Date.now()).toISOString();
         const jokeReport = {
             joke: joke,
-            date: Date.now(),
+            date: today,
             points: 1,
         };
         let setPoint = ['1', '2', '3'];
-        const allButtons = document.querySelectorAll('button[data-type="points"]');
-        allButtons.forEach((button) => pointsButtonContainer === null || pointsButtonContainer === void 0 ? void 0 : pointsButtonContainer.removeChild(button));
-        setPoint.forEach((point) => {
+        const buttonContainer = document.createElement('div');
+        const buttonContainerDOM = document.querySelector('.button-container');
+        const classesForButtonContainer = [
+            'button-container',
+            'is-flex',
+            'is-justify-content-center',
+            'is-align-items-center',
+            'mt-3',
+            'mb-3',
+        ];
+        buttonContainer === null || buttonContainer === void 0 ? void 0 : buttonContainer.classList.add(...classesForButtonContainer);
+        const classesToAdd = ['button', 'is-info', 'mb-2', 'mr-2'];
+        const jokeContainer = document.querySelector('.joke');
+        if (buttonContainerDOM)
+            containerJoke === null || containerJoke === void 0 ? void 0 : containerJoke.replaceChild(buttonContainer, buttonContainerDOM);
+        setPoint.map((point) => {
             let pointsButton = document.createElement('button');
             pointsButton.textContent = point;
             pointsButton.setAttribute('value', point);
-            pointsButton.setAttribute('data-type', 'points');
+            pointsButton.classList.add(...classesToAdd);
             pointsButton.addEventListener('click', (e) => setPoints(e, jokeReport));
-            pointsButtonContainer === null || pointsButtonContainer === void 0 ? void 0 : pointsButtonContainer.appendChild(pointsButton);
+            buttonContainer.appendChild(pointsButton);
+            jokeContainer === null || jokeContainer === void 0 ? void 0 : jokeContainer.insertAdjacentElement('afterend', buttonContainer);
         });
-        const checkIfJoke = containerJoke === null || containerJoke === void 0 ? void 0 : containerJoke.children[2];
+        const checkIfJoke = jokeContainer === null || jokeContainer === void 0 ? void 0 : jokeContainer.firstChild;
         const jokeInDOM = document.createElement('p');
-        const textJoke = document.createTextNode(`${id}     ${joke}`);
+        const textJoke = document.createTextNode(joke);
         jokeInDOM.appendChild(textJoke);
-        if ((checkIfJoke === null || checkIfJoke === void 0 ? void 0 : checkIfJoke.tagName) === 'BUTTON') {
+        if (!(jokeContainer === null || jokeContainer === void 0 ? void 0 : jokeContainer.firstChild)) {
             if (button)
                 button.textContent = 'next';
             if (title)
-                title.textContent = 'Haha';
-            button === null || button === void 0 ? void 0 : button.insertAdjacentElement('beforebegin', jokeInDOM);
+                title.textContent = 'Haha'; //maybe a gif here
+            jokeContainer === null || jokeContainer === void 0 ? void 0 : jokeContainer.appendChild(jokeInDOM);
         }
         else {
             if (checkIfJoke)
-                containerJoke === null || containerJoke === void 0 ? void 0 : containerJoke.replaceChild(jokeInDOM, checkIfJoke);
+                jokeContainer === null || jokeContainer === void 0 ? void 0 : jokeContainer.replaceChild(jokeInDOM, checkIfJoke);
         }
     });
 }
@@ -73,7 +95,6 @@ function generateReport(joke) {
     const flag = reportedJokes.indexOf(found);
     if (!found) {
         reportedJokes = [...reportedJokes, joke];
-        console.log(2);
     }
     else {
         let edited = Object.assign(Object.assign({}, found), { points: joke.points });
@@ -83,3 +104,10 @@ function generateReport(joke) {
     }
     console.log(reportedJokes);
 }
+const printCurrentWeather = (currentWeather) => __awaiter(void 0, void 0, void 0, function* () {
+    const clima = yield currentWeather;
+    const { main, name, weather, } = clima;
+    /*  const { main, name, weather } = clima */
+    console.log(clima);
+});
+printCurrentWeather(fetchCurrentWeather());
