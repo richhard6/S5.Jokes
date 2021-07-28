@@ -61,10 +61,11 @@ async function fetchCurrentWeather(): Promise<IClimate> {
   const latitude: void = navigator.geolocation.getCurrentPosition(function (
     position
   ): ILatLong {
-    console.log(position.coords.latitude, position.coords.longitude)
-    return [position.coords.latitude, position.coords.longitude]
+    console.log(position.coords.latitude, position.coords.longitude) //atento con esto.
+    return [position.coords.latitude, position.coords.longitude] // pasa algo raro.
   })
 
+  const [lat, long] = latitude
   //?lat={lat}&lon={lon}
   const currentWeather: Promise<IClimate> = fetch(
     'http://api.openweathermap.org/data/2.5/weather?q=barcelona&appid=fedca1624d38dda6a9594d7e3a842cc0&units=metric'
