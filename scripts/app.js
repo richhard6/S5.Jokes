@@ -15,6 +15,11 @@ button === null || button === void 0 ? void 0 : button.addEventListener('click',
 let reportedJokes = [];
 function fetchCurrentWeather() {
     return __awaiter(this, void 0, void 0, function* () {
+        const latitude = navigator.geolocation.getCurrentPosition(function (position) {
+            console.log(position.coords.latitude, position.coords.longitude);
+            return [position.coords.latitude, position.coords.longitude];
+        });
+        //?lat={lat}&lon={lon}
         const currentWeather = fetch('http://api.openweathermap.org/data/2.5/weather?q=barcelona&appid=fedca1624d38dda6a9594d7e3a842cc0&units=metric')
             .then((res) => res.json())
             .then((data) => data);
@@ -132,33 +137,45 @@ function processCurrentWeather(currentWeather) {
 }
 function printCurrentWeather({ name, feels_like, temp, temp_max, temp_min, id, main, description, icon, dt, }) {
     return __awaiter(this, void 0, void 0, function* () {
+        //a dt le faltan 3 numeros y no da la fecha bien...
+        const climaDiv = document.querySelector('.clima');
+        const todayDate = new Date(Date.now()); //falta formatearla bien
+        //const separatedDate: Array<string> = todayDate.splice
+        const iconCode = `http://openweathermap.org/img/w/${icon}.png`;
+        climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.setAttribute('style', `background-image:url(${iconCode}); background-repeat:no-repeat;background-position: right center`);
         const html = `
   
 
-      <div class="block">
-          ${name}
-      </div>
 
-      <div class="block">
-           ${dt}
-      </div>
-      <div class="block">
+  
+      <h2 class="is-size-3"> 
+          ${name}
+      </h2>
+      
+
+      <small>
+           ${todayDate}
+      </small>
+      <h4>
           ${main}
-      </div>
-      <div class="block">
+      </h4>
+      <p class="is-size-4">
  
-         Current temperature ${temp} and feels like ${feels_like}
-      </div>
-      <div class="block">
-         With minimum temperature ${temp_min} and maximum ${temp_max}
-      </div>
+         ${temp}°
+      </p>
+
+      <p class="is-size-7">
+      Feels like: ${feels_like}°
+      </p>
+      <p class="is-size-6">
+          ${temp_min}° / ${temp_max}°
+      </p>
   
   
   
   
   
   `;
-        const climaDiv = document.querySelector('.clima');
         climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.insertAdjacentHTML('beforeend', html);
     });
 }
