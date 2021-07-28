@@ -24,12 +24,19 @@ interface IClimate {
   coord: Object
   dt: Number
   id: Number
-  main: Object
+  main: IMain
   name: string
   sys: Object
   timezone: Number
   weather: Array<Object>
   wind: Object
+}
+
+interface IMain {
+  feels_like: Number
+  temp: Number
+  temp_max: Number
+  temp_min: Number
 }
 
 let reportedJokes: IReport[] = []
@@ -156,11 +163,6 @@ function generateReport(joke: IReport): void {
 
   console.log(reportedJokes)
 }
-interface IWeather {
-  main: Object
-  name: string
-  weather: Array<Object>
-}
 
 async function printCurrentWeather(currentWeather: Promise<IClimate>) {
   const clima: IClimate = await currentWeather
@@ -170,13 +172,9 @@ async function printCurrentWeather(currentWeather: Promise<IClimate>) {
   console.log(main, name, weather)
   /*  const { main, name, weather } = clima */
 
-  const {
-    feels_like,
-    temp,
-    temp_max,
-    temp_min,
-  }: { feels_like: Number; temp: Number; temp_max: Number; temp_min: Number } =
-    main
+  let { feels_like, temp, temp_max, temp_min } = main
+
+  console.log(clima)
 }
 
 printCurrentWeather(fetchCurrentWeather())

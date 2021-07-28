@@ -111,7 +111,8 @@ function printCurrentWeather(currentWeather) {
         const { main, name, weather } = clima;
         console.log(main, name, weather);
         /*  const { main, name, weather } = clima */
-        const { feels_like, temp, temp_max, temp_min, } = main;
+        let { feels_like, temp, temp_max, temp_min } = main;
+        console.log(clima);
     });
 }
 printCurrentWeather(fetchCurrentWeather());
