@@ -105,14 +105,61 @@ function generateReport(joke) {
     }
     console.log(reportedJokes);
 }
-function printCurrentWeather(currentWeather) {
+function processCurrentWeather(currentWeather) {
     return __awaiter(this, void 0, void 0, function* () {
         const clima = yield currentWeather;
-        const { main, name, weather } = clima;
-        console.log(main, name, weather);
-        /*  const { main, name, weather } = clima */
-        let { feels_like, temp, temp_max, temp_min } = main;
+        const { main, name, weather, dt } = clima;
         console.log(clima);
+        //console.log(main, name, weather)
+        /*  const { main, name, weather } = clima */
+        const { feels_like, temp, temp_max, temp_min } = main;
+        const { id, main: current, description, icon } = weather[0];
+        const formated = {
+            name,
+            feels_like,
+            temp,
+            temp_max,
+            temp_min,
+            id,
+            main: current,
+            description,
+            icon,
+            dt,
+        };
+        console.log(formated);
+        printCurrentWeather(formated);
     });
 }
-printCurrentWeather(fetchCurrentWeather());
+function printCurrentWeather({ name, feels_like, temp, temp_max, temp_min, id, main, description, icon, dt, }) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const html = `
+  
+
+      <div class="block">
+          ${name}
+      </div>
+
+      <div class="block">
+           ${dt}
+      </div>
+      <div class="block">
+          ${main}
+      </div>
+      <div class="block">
+ 
+         Current temperature ${temp} and feels like ${feels_like}
+      </div>
+      <div class="block">
+         With minimum temperature ${temp_min} and maximum ${temp_max}
+      </div>
+  
+  
+  
+  
+  
+  `;
+        const climaDiv = document.querySelector('.clima');
+        climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.insertAdjacentHTML('beforeend', html);
+    });
+}
+processCurrentWeather(fetchCurrentWeather());

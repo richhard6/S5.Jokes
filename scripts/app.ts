@@ -28,7 +28,7 @@ interface IClimate {
   name: string
   sys: Object
   timezone: Number
-  weather: Array<Object>
+  weather: Array<IWeather>
   wind: Object
 }
 
@@ -37,6 +37,18 @@ interface IMain {
   temp: Number
   temp_max: Number
   temp_min: Number
+}
+
+interface IWeather {
+  id: Number
+  main: String
+  description: String
+  icon: String
+}
+
+interface IFormated extends IWeather, IMain {
+  name: String
+  dt: Number
 }
 
 let reportedJokes: IReport[] = []
@@ -164,17 +176,81 @@ function generateReport(joke: IReport): void {
   console.log(reportedJokes)
 }
 
-async function printCurrentWeather(currentWeather: Promise<IClimate>) {
+async function processCurrentWeather(
+  currentWeather: Promise<IClimate>
+): Promise<void> {
   const clima: IClimate = await currentWeather
 
-  const { main, name, weather } = clima
-
-  console.log(main, name, weather)
-  /*  const { main, name, weather } = clima */
-
-  let { feels_like, temp, temp_max, temp_min } = main
+  const { main, name, weather, dt } = clima
 
   console.log(clima)
+
+  //console.log(main, name, weather)
+  /*  const { main, name, weather } = clima */
+
+  const { feels_like, temp, temp_max, temp_min } = main
+
+  const { id, main: current, description, icon } = weather[0]
+
+  const formated = {
+    name,
+    feels_like,
+    temp,
+    temp_max,
+    temp_min,
+    id,
+    main: current,
+    description,
+    icon,
+    dt,
+  }
+  console.log(formated)
+
+  printCurrentWeather(formated)
 }
 
-printCurrentWeather(fetchCurrentWeather())
+async function printCurrentWeather({
+  name,
+  feels_like,
+  temp,
+  temp_max,
+  temp_min,
+  id,
+  main,
+  description,
+  icon,
+  dt,
+}: IFormated): Promise<void> {
+  const html: HTMLDivElement | string = `
+  
+
+      <div class="block">
+          ${name}
+      </div>
+
+      <div class="block">
+           ${dt}
+      </div>
+      <div class="block">
+          ${main}
+      </div>
+      <div class="block">
+ 
+         Current temperature ${temp} and feels like ${feels_like}
+      </div>
+      <div class="block">
+         With minimum temperature ${temp_min} and maximum ${temp_max}
+      </div>
+  
+  
+  
+  
+  
+  `
+
+  const climaDiv = document.querySelector<HTMLDivElement>('.clima')
+
+  climaDiv?.insertAdjacentHTML('beforeend', html)
+}
+
+processCurrentWeather(fetchCurrentWeather())
