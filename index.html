@@ -12,28 +12,57 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="tile is-vertical is-2">
-      <div class="tile">
-        <div class="tile is-parent is-vertical">
-          <article class="tile is-child notification is-primary">
-            <div
-              class="
-                clima
-                is-flex
-                is-flex-direction-column
-                is-justify-content-center
-                is-align-items-center
-              "
-            ></div>
-          </article>
-        </div>
+    <div class="tile is-ancestor m-3">
+      <div class="tile is-parent is-unselectable">
+        <article class="tile is-child notification is-primary box">
+          <div
+            class="
+              clima
+              is-flex
+              is-flex-direction-column
+              is-justify-content-center
+              is-align-items-center
+            "
+          ></div>
+        </article>
+      </div>
+
+      <div class="tile is-parent">
+        <article class="tile is-child notification">
+          <div
+            class="
+              is-flex
+              is-flex-direction-column
+              is-justify-content-center
+              is-align-items-center
+            "
+          >
+            gifs?
+          </div>
+        </article>
+      </div>
+
+      <div class="tile is-parent is-clipped">
+        <article class="tile is-child notification is-primary">
+          <div
+            class="
+              ratedJokes
+              is-flex
+              is-flex-direction-column
+              is-justify-content-center
+              is-align-items-center
+            "
+          >
+            ratedjokes
+          </div>
+        </article>
       </div>
     </div>
 
     <div
       class="
         tile
-        is-ancestor is-flex is-justify-content-center is-align-items-center
+        is-flex is-justify-content-center is-align-items-center
         main-container
       "
     >
@@ -48,7 +77,9 @@
               is-flex is-flex-direction-column
             "
           >
-            <p class="title titlejoke">Ready to get dad jokes?</p>
+            <p class="title titlejoke has-text-centered">
+              Ready to get dad jokes?
+            </p>
 
             <div class="joke"></div>
 
@@ -57,6 +88,23 @@
         </div>
       </div>
     </div>
-    <script src="./scripts/app.js"></script>
+
+    <div class="tile is-ancestor m-3">
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-primary box">
+          <div
+            class="
+              clima
+              is-flex
+              is-flex-direction-column
+              is-justify-content-center
+              is-align-items-center
+            "
+          ></div>
+        </article>
+      </div>
+    </div>
+
+    <script type="module" src="./scripts/app.js"></script>
   </body>
 </html>

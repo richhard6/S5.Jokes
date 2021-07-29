@@ -6,8 +6,9 @@ interface IJoke {
 
 interface IReport {
   joke: String
-  date: String
+  date: string
   points: Number
+  id: string
 }
 
 interface IClimate {
@@ -51,6 +52,10 @@ interface ILatLong {
 
 type MaybeILatLong = Array<Number> | void
 
+interface IReportedJokes {
+  string: Object
+}
+
 export {
   IJoke,
   IReport,
@@ -60,4 +65,5 @@ export {
   IFormated,
   ILatLong,
   MaybeILatLong,
+  IReportedJokes,
 }
