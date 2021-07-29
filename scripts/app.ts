@@ -1,68 +1,14 @@
+import { IJoke, IReport, IClimate, IFormated, MaybeILatLong } from './interface'
+
 const button = document.querySelector<HTMLButtonElement>('.getJoke')
 const containerJoke = document.querySelector<HTMLDivElement>('.containerjoke')
-
 const title = document.querySelector<HTMLParagraphElement>('.titlejoke')
 
 button?.addEventListener('click', printRandomJoke)
 
-interface IJoke {
-  id: string
-  joke: string
-  status: number
-}
-
-interface IReport {
-  joke: String
-  date: String
-  points: Number
-}
-
-interface IClimate {
-  base: String
-  clouds: Object
-  cod: Number
-  coord: Object
-  dt: number
-  id: Number
-  main: IMain
-  name: string
-  sys: Object
-  timezone: Number
-  weather: Array<IWeather>
-  wind: Object
-}
-
-interface IMain {
-  feels_like: Number
-  temp: Number
-  temp_max: Number
-  temp_min: Number
-}
-
-interface IWeather {
-  id: Number
-  main: String
-  description: String
-  icon: String
-}
-
-interface IFormated extends IWeather, IMain {
-  name: String
-  dt: number
-}
-
 let reportedJokes: IReport[] = []
 
-interface ILatLong {
-  0: Number
-  1: Number
-}
-
-type MaybeILatLong = Array<Number> | void
-
-type LatLong = [number, number]
-
-function getCurrentLatLong(callback: Function): Promise<IClimate> {
+function getCurrentWeather(callback: Function): Promise<IClimate> {
   const latitude: Promise<IClimate> = navigator.geolocation.getCurrentPosition(
     (position): Promise<IClimate> => {
       return callback(
@@ -74,17 +20,12 @@ function getCurrentLatLong(callback: Function): Promise<IClimate> {
     }
   ) as unknown as Promise<IClimate>
 
-  console.log(latitude)
-
   return latitude
 }
 
 async function fetchCurrentWeather(latLong: MaybeILatLong): Promise<void> {
   const [lat, long] = latLong as Array<Number>
 
-  console.log(lat, long)
-  //fedca1624d38dda6a9594d7e3a842cc0
-  //?lat={lat}&lon={lon}
   const currentWeather: IClimate = await fetch(
     `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=fedca1624d38dda6a9594d7e3a842cc0&units=metric`
   )
@@ -240,7 +181,6 @@ function printCurrentWeather({
   main,
   description,
   icon,
-  dt,
 }: IFormated): void {
   //a dt le faltan 3 numeros y no da la fecha bien...
   const climaDiv = document.querySelector<HTMLDivElement>('.clima')
@@ -255,40 +195,32 @@ function printCurrentWeather({
   )
 
   const html: HTMLDivElement | string = `
-  
-
-
-  
       <h2 class="is-size-3"> 
           ${name}
       </h2>
-      
-
+    
       <small>
            ${todayDate}
       </small>
+
       <h4>
           ${main}
       </h4>
+
       <p class="is-size-4">
- 
-         ${temp}°
+          ${temp}°
       </p>
 
       <p class="is-size-7">
-      Feels like: ${feels_like}°
+          Feels like: ${feels_like}°
       </p>
+
       <p class="is-size-6">
           ${temp_min}° / ${temp_max}°
       </p>
-  
-  
-  
-  
-  
   `
 
   climaDiv?.insertAdjacentHTML('beforeend', html)
 }
 
-getCurrentLatLong((latLong: Promise<IClimate>) => latLong)
+getCurrentWeather((latLong: Promise<IClimate>) => latLong)
