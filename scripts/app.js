@@ -13,18 +13,26 @@ const containerJoke = document.querySelector('.containerjoke');
 const title = document.querySelector('.titlejoke');
 button === null || button === void 0 ? void 0 : button.addEventListener('click', printRandomJoke);
 let reportedJokes = [];
-function fetchCurrentWeather() {
+function getCurrentLatLong(callback) {
+    const latitude = navigator.geolocation.getCurrentPosition((position) => {
+        return callback(fetchCurrentWeather([
+            position.coords.latitude,
+            position.coords.longitude,
+        ]));
+    });
+    console.log(latitude);
+    return latitude;
+}
+function fetchCurrentWeather(latLong) {
     return __awaiter(this, void 0, void 0, function* () {
-        const latitude = navigator.geolocation.getCurrentPosition(function (position) {
-            console.log(position.coords.latitude, position.coords.longitude);
-            return [position.coords.latitude, position.coords.longitude];
-        });
+        const [lat, long] = latLong;
+        console.log(lat, long);
+        //fedca1624d38dda6a9594d7e3a842cc0
         //?lat={lat}&lon={lon}
-        const currentWeather = fetch('http://api.openweathermap.org/data/2.5/weather?q=barcelona&appid=fedca1624d38dda6a9594d7e3a842cc0&units=metric')
+        const currentWeather = yield fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=fedca1624d38dda6a9594d7e3a842cc0&units=metric`)
             .then((res) => res.json())
             .then((data) => data);
-        console.log(typeof currentWeather);
-        return currentWeather;
+        processCurrentWeather(currentWeather);
     });
 }
 function fetchRandomJoke() {
@@ -112,11 +120,8 @@ function generateReport(joke) {
 }
 function processCurrentWeather(currentWeather) {
     return __awaiter(this, void 0, void 0, function* () {
-        const clima = yield currentWeather;
+        const clima = currentWeather;
         const { main, name, weather, dt } = clima;
-        console.log(clima);
-        //console.log(main, name, weather)
-        /*  const { main, name, weather } = clima */
         const { feels_like, temp, temp_max, temp_min } = main;
         const { id, main: current, description, icon } = weather[0];
         const formated = {
@@ -131,19 +136,17 @@ function processCurrentWeather(currentWeather) {
             icon,
             dt,
         };
-        console.log(formated);
         printCurrentWeather(formated);
     });
 }
 function printCurrentWeather({ name, feels_like, temp, temp_max, temp_min, id, main, description, icon, dt, }) {
-    return __awaiter(this, void 0, void 0, function* () {
-        //a dt le faltan 3 numeros y no da la fecha bien...
-        const climaDiv = document.querySelector('.clima');
-        const todayDate = new Date(Date.now()); //falta formatearla bien
-        //const separatedDate: Array<string> = todayDate.splice
-        const iconCode = `http://openweathermap.org/img/w/${icon}.png`;
-        climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.setAttribute('style', `background-image:url(${iconCode}); background-repeat:no-repeat;background-position: right center`);
-        const html = `
+    //a dt le faltan 3 numeros y no da la fecha bien...
+    const climaDiv = document.querySelector('.clima');
+    const todayDate = new Date(Date.now()); //falta formatearla bien
+    //const separatedDate: Array<string> = todayDate.splice
+    const iconCode = `http://openweathermap.org/img/w/${icon}.png`;
+    climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.setAttribute('style', `background-image:url(${iconCode}); background-repeat:no-repeat;background-position: right center`);
+    const html = `
   
 
 
@@ -176,7 +179,6 @@ function printCurrentWeather({ name, feels_like, temp, temp_max, temp_min, id, m
   
   
   `;
-        climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.insertAdjacentHTML('beforeend', html);
-    });
+    climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.insertAdjacentHTML('beforeend', html);
 }
-processCurrentWeather(fetchCurrentWeather());
+getCurrentLatLong((latLong) => latLong);

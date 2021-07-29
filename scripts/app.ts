@@ -54,28 +54,44 @@ interface IFormated extends IWeather, IMain {
 let reportedJokes: IReport[] = []
 
 interface ILatLong {
-  [index: number]: number
+  0: Number
+  1: Number
 }
 
-async function fetchCurrentWeather(): Promise<IClimate> {
-  const latitude: void = navigator.geolocation.getCurrentPosition(function (
-    position
-  ): ILatLong {
-    console.log(position.coords.latitude, position.coords.longitude) //atento con esto.
-    return [position.coords.latitude, position.coords.longitude] // pasa algo raro.
-  })
+type MaybeILatLong = Array<Number> | void
 
-  const [lat, long] = latitude
+type LatLong = [number, number]
+
+function getCurrentLatLong(callback: Function): Promise<IClimate> {
+  const latitude: Promise<IClimate> = navigator.geolocation.getCurrentPosition(
+    (position): Promise<IClimate> => {
+      return callback(
+        fetchCurrentWeather([
+          position.coords.latitude,
+          position.coords.longitude,
+        ])
+      )
+    }
+  ) as unknown as Promise<IClimate>
+
+  console.log(latitude)
+
+  return latitude
+}
+
+async function fetchCurrentWeather(latLong: MaybeILatLong): Promise<void> {
+  const [lat, long] = latLong as Array<Number>
+
+  console.log(lat, long)
+  //fedca1624d38dda6a9594d7e3a842cc0
   //?lat={lat}&lon={lon}
-  const currentWeather: Promise<IClimate> = fetch(
-    'http://api.openweathermap.org/data/2.5/weather?q=barcelona&appid=fedca1624d38dda6a9594d7e3a842cc0&units=metric'
+  const currentWeather: IClimate = await fetch(
+    `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=fedca1624d38dda6a9594d7e3a842cc0&units=metric`
   )
     .then((res) => res.json())
     .then((data) => data)
 
-  console.log(typeof currentWeather)
-
-  return currentWeather
+  processCurrentWeather(currentWeather)
 }
 
 function fetchRandomJoke(): Promise<IJoke> {
@@ -189,17 +205,10 @@ function generateReport(joke: IReport): void {
   console.log(reportedJokes)
 }
 
-async function processCurrentWeather(
-  currentWeather: Promise<IClimate>
-): Promise<void> {
-  const clima: IClimate = await currentWeather
+async function processCurrentWeather(currentWeather: IClimate): Promise<void> {
+  const clima: IClimate = currentWeather
 
   const { main, name, weather, dt } = clima
-
-  console.log(clima)
-
-  //console.log(main, name, weather)
-  /*  const { main, name, weather } = clima */
 
   const { feels_like, temp, temp_max, temp_min } = main
 
@@ -217,12 +226,11 @@ async function processCurrentWeather(
     icon,
     dt,
   }
-  console.log(formated)
 
   printCurrentWeather(formated)
 }
 
-async function printCurrentWeather({
+function printCurrentWeather({
   name,
   feels_like,
   temp,
@@ -233,13 +241,13 @@ async function printCurrentWeather({
   description,
   icon,
   dt,
-}: IFormated): Promise<void> {
+}: IFormated): void {
   //a dt le faltan 3 numeros y no da la fecha bien...
   const climaDiv = document.querySelector<HTMLDivElement>('.clima')
   const todayDate: Date = new Date(Date.now()) //falta formatearla bien
   //const separatedDate: Array<string> = todayDate.splice
 
-  const iconCode = `http://openweathermap.org/img/w/${icon}.png`
+  const iconCode: string = `http://openweathermap.org/img/w/${icon}.png`
 
   climaDiv?.setAttribute(
     'style',
@@ -283,4 +291,4 @@ async function printCurrentWeather({
   climaDiv?.insertAdjacentHTML('beforeend', html)
 }
 
-processCurrentWeather(fetchCurrentWeather())
+getCurrentLatLong((latLong: Promise<IClimate>) => latLong)
