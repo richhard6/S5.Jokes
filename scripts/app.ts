@@ -7,8 +7,8 @@ import {
   NodeToDestroy,
   NodeToAdd,
 } from './interface'
-const todayDate: string = new Date(Date.now()).toLocaleString()
 
+const todayDate: string = new Date(Date.now()).toLocaleString()
 const button = document.querySelector<HTMLButtonElement>('.getJoke')
 const containerJoke = document.querySelector<HTMLDivElement>('.containerjoke')
 const title = document.querySelector<HTMLParagraphElement>('.titlejoke')
@@ -22,18 +22,15 @@ let reportedJokes: IReport[] = []
 
 function fetchRandomJoke(): Promise<IJoke> {
   const URL: string = 'https://icanhazdadjoke.com'
-
-  const options: object = {
+  const options: Object = {
     method: 'GET',
     headers: {
       Accept: 'application/json',
     },
   }
-
   const jokes: IJoke | Promise<IJoke> = fetch(URL, options)
     .then((res) => res.json())
     .then((data) => data)
-
   return jokes
 }
 
@@ -85,11 +82,8 @@ async function printRandomJoke(): Promise<void> {
   })
 
   const checkIfJoke: ChildNode | undefined | null = jokeContainer?.firstChild
-
   const jokeInDOM: HTMLParagraphElement = document.createElement('p')
-
   const textJoke: Text = document.createTextNode(joke)
-
   jokeInDOM.appendChild(textJoke)
 
   if (!jokeContainer?.firstChild) {
@@ -128,8 +122,6 @@ function generateReport(joke: IReport): void {
     reportedJokes = [...reportedJokes.slice(0, flag), ...restJokes]
     printRatedJokes(reportedJokes)
   }
-
-  console.log(reportedJokes)
 }
 
 function getCurrentWeather(callback: Function): void {
@@ -154,13 +146,9 @@ async function fetchCurrentWeather(latLong: MaybeILatLong): Promise<void> {
 
 async function processCurrentWeather(currentWeather: IClimate): Promise<void> {
   const clima: IClimate = currentWeather
-
   const { main, name, weather, dt } = clima
-
   const { feels_like, temp, temp_max, temp_min } = main
-
   const { id, main: current, description, icon } = weather[0]
-
   const formated = {
     name,
     feels_like,
@@ -227,10 +215,8 @@ function printCurrentWeather({
       </p>
   `
 
-  climaDiv?.insertAdjacentHTML('beforeend', html)
+  climaDiv?.insertAdjacentHTML('beforeend', html) //actualizar reloj.
 }
-
-//reduce filter y sort
 
 function printRatedJokes(reportedJokes: IReport[]): void {
   const reducer = (obj: IReport[], val: IReport): IReport[] => {
@@ -238,7 +224,7 @@ function printRatedJokes(reportedJokes: IReport[]): void {
     if (obj[val.id] == null) {
       obj[val.id] = { ...val }
     } else {
-      obj[val.id] = { ...val, ...val.points }
+      obj[val.id] = { ...val, ...val.points } //revisar si doble spread es necesario
     }
     return obj
   }
@@ -255,32 +241,32 @@ function printRatedJokes(reportedJokes: IReport[]): void {
 
       const htmlInDOM: string = `
       <div class="panel-block is-active isThere" data-id="${joke.id}">
-<div class="dropdown is-hoverable">
-<div class="dropdown-trigger">
-  <button
-    class="button"
-    aria-haspopup="true"
-    aria-controls="dropdown-menu4"
-  >
-    <span>${joke.id}</span>
-    <span class="icon is-small">
-      <i class="fas fa-angle-down" aria-hidden="true"></i>
-    </span>
-  </button>
-</div>
-<div class="dropdown-menu" id="dropdown-menu4" role="menu">
-  <div class="dropdown-content">
-    <div class="dropdown-item">
-      <p>
-     ${joke.joke}
-      </p>
-      <span>⭐️ ${joke.points}</span>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-`
+        <div class="dropdown is-hoverable">
+        <div class="dropdown-trigger">
+          <button
+            class="button"
+            aria-haspopup="true"
+            aria-controls="dropdown-menu4"
+          >
+            <span>${joke.id}</span>
+            <span class="icon is-small">
+              <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+          </button>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+          <div class="dropdown-content">
+            <div class="dropdown-item">
+              <p>
+            ${joke.joke}
+              </p>
+              <span>⭐️ ${joke.points}</span>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
+        `
 
       const parsedHTML = new DOMParser().parseFromString(htmlInDOM, 'text/html')
       const savedJokes = document.querySelectorAll<HTMLDivElement>('.isThere')
