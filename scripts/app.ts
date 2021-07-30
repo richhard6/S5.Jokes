@@ -4,14 +4,15 @@ import {
   IClimate,
   IFormated,
   MaybeILatLong,
-  IReportedJokes,
+  NodeToDestroy,
+  NodeToAdd,
 } from './interface'
 const todayDate: string = new Date(Date.now()).toLocaleString()
 
 const button = document.querySelector<HTMLButtonElement>('.getJoke')
 const containerJoke = document.querySelector<HTMLDivElement>('.containerjoke')
 const title = document.querySelector<HTMLParagraphElement>('.titlejoke')
-const ratedContainer = document.querySelector<HTMLDivElement>('.ratedJokes')
+const ratedContainer = document.querySelector<HTMLDivElement>('.rated-jokes')
 const jokeContainer = document.querySelector<HTMLDivElement>('.joke')
 const climaDiv = document.querySelector<HTMLDivElement>('.clima')
 
@@ -232,7 +233,7 @@ function printCurrentWeather({
 //reduce filter y sort
 
 function printRatedJokes(reportedJokes: IReport[]): void {
-  const reducer = (obj: Array<Object>, val: IReport): Array<Object> => {
+  const reducer = (obj: IReport[], val: IReport): IReport[] => {
     console.log(obj)
     if (obj[val.id] == null) {
       obj[val.id] = { ...val }
@@ -242,18 +243,70 @@ function printRatedJokes(reportedJokes: IReport[]): void {
     return obj
   }
 
-  const html: Array<Object> = reportedJokes
+  const html: IReport[] = reportedJokes
     .map((reportedJoke) => reportedJoke)
-    .sort((a, b) => (new Date(a.date) > new Date(b.date) ? 1 : -1))
+    .sort((a, b) => (new Date(a.date) > new Date(b.date) ? -1 : 1))
     .reduce(reducer, [])
 
-  console.log(html)
+  for (const id in html) {
+    if (Object.prototype.hasOwnProperty.call(html, id)) {
+      const joke = html[id] //refactor deconstruction
+      console.log(joke.joke, joke.points, joke.date, joke.id)
 
-  for (const id of html) {
-    console.log(html[id], 'xdd')
+      const htmlInDOM: string = `
+      <div class="panel-block is-active isThere" data-id="${joke.id}">
+<div class="dropdown is-hoverable">
+<div class="dropdown-trigger">
+  <button
+    class="button"
+    aria-haspopup="true"
+    aria-controls="dropdown-menu4"
+  >
+    <span>${joke.id}</span>
+    <span class="icon is-small">
+      <i class="fas fa-angle-down" aria-hidden="true"></i>
+    </span>
+  </button>
+</div>
+<div class="dropdown-menu" id="dropdown-menu4" role="menu">
+  <div class="dropdown-content">
+    <div class="dropdown-item">
+      <p>
+     ${joke.joke}
+      </p>
+      <span>⭐️ ${joke.points}</span>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+`
+
+      const parsedHTML = new DOMParser().parseFromString(htmlInDOM, 'text/html')
+      const savedJokes = document.querySelectorAll<HTMLDivElement>('.isThere')
+      const jokeToAdd = parsedHTML.documentElement.querySelector<Element>(
+        '.isThere'
+      ) as NodeToAdd
+
+      ratedContainer?.appendChild(jokeToAdd)
+
+      if (savedJokes) {
+        Array.from(savedJokes)
+          .filter((jok) => jok.dataset.id === joke.id)
+          .map((jokeFiltered) => {
+            console.log(jokeFiltered.dataset.id, 'sad')
+            const coincidence = document.querySelector<Element>(
+              `[data-id="${jokeFiltered.dataset.id}"]`
+            )
+            if (coincidence) {
+              const definitiva: NodeToDestroy = coincidence?.children[0]
+                .parentNode as Node
+              ratedContainer?.removeChild(definitiva)
+            }
+          })
+      }
+    }
   }
 }
-
-//const html = `<div data-id="${reportedJoke.id}">${reportedJoke.joke} ${reportedJoke.points}</div>`
 
 getCurrentWeather((latLong: Promise<IClimate>) => latLong)

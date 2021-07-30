@@ -54,7 +54,7 @@ var todayDate = new Date(Date.now()).toLocaleString();
 var button = document.querySelector('.getJoke');
 var containerJoke = document.querySelector('.containerjoke');
 var title = document.querySelector('.titlejoke');
-var ratedContainer = document.querySelector('.ratedJokes');
+var ratedContainer = document.querySelector('.rated-jokes');
 var jokeContainer = document.querySelector('.joke');
 var climaDiv = document.querySelector('.clima');
 button === null || button === void 0 ? void 0 : button.addEventListener('click', printRandomJoke);
@@ -226,14 +226,34 @@ function printRatedJokes(reportedJokes) {
     };
     var html = reportedJokes
         .map(function (reportedJoke) { return reportedJoke; })
-        .sort(function (a, b) { return (new Date(a.date) > new Date(b.date) ? 1 : -1); })
+        .sort(function (a, b) { return (new Date(a.date) > new Date(b.date) ? -1 : 1); })
         .reduce(reducer, []);
-    console.log(html);
-    for (var _i = 0, html_1 = html; _i < html_1.length; _i++) {
-        var id = html_1[_i];
-        console.log(html[id], 'xdd');
+    var _loop_1 = function (id) {
+        if (Object.prototype.hasOwnProperty.call(html, id)) {
+            var joke_1 = html[id]; //refactor deconstruction
+            console.log(joke_1.joke, joke_1.points, joke_1.date, joke_1.id);
+            var htmlInDOM = "\n      <div class=\"panel-block is-active isThere\" data-id=\"" + joke_1.id + "\">\n<div class=\"dropdown is-hoverable\">\n<div class=\"dropdown-trigger\">\n  <button\n    class=\"button\"\n    aria-haspopup=\"true\"\n    aria-controls=\"dropdown-menu4\"\n  >\n    <span>" + joke_1.id + "</span>\n    <span class=\"icon is-small\">\n      <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>\n    </span>\n  </button>\n</div>\n<div class=\"dropdown-menu\" id=\"dropdown-menu4\" role=\"menu\">\n  <div class=\"dropdown-content\">\n    <div class=\"dropdown-item\">\n      <p>\n     " + joke_1.joke + "\n      </p>\n      <span>\u2B50\uFE0F " + joke_1.points + "</span>\n    </div>\n  </div>\n</div>\n</div>\n</div>\n";
+            var parsedHTML = new DOMParser().parseFromString(htmlInDOM, 'text/html');
+            var savedJokes = document.querySelectorAll('.isThere');
+            var jokeToAdd = parsedHTML.documentElement.querySelector('.isThere');
+            ratedContainer === null || ratedContainer === void 0 ? void 0 : ratedContainer.appendChild(jokeToAdd);
+            if (savedJokes) {
+                Array.from(savedJokes)
+                    .filter(function (jok) { return jok.dataset.id === joke_1.id; })
+                    .map(function (jokeFiltered) {
+                    console.log(jokeFiltered.dataset.id, 'sad');
+                    var coincidence = document.querySelector("[data-id=\"" + jokeFiltered.dataset.id + "\"]");
+                    if (coincidence) {
+                        var definitiva = coincidence === null || coincidence === void 0 ? void 0 : coincidence.children[0].parentNode;
+                        ratedContainer === null || ratedContainer === void 0 ? void 0 : ratedContainer.removeChild(definitiva);
+                    }
+                });
+            }
+        }
+    };
+    for (var id in html) {
+        _loop_1(id);
     }
 }
-//const html = `<div data-id="${reportedJoke.id}">${reportedJoke.joke} ${reportedJoke.points}</div>`
 getCurrentWeather(function (latLong) { return latLong; });
 export {};

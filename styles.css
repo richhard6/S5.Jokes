@@ -1,0 +1,19 @@
+.rated-jokes {
+  overflow: scroll;
+  position: relative;
+}
+
+.blockage {
+  max-height: 300px;
+  z-index: 1;
+}
+
+.titleJokes {
+  position: sticky; /* atencion aqui cuando esta  minimizado */
+  top: 0; /*   arreglar el z .index */
+  z-index: 1;
+}
+
+.isThere {
+  z-index: -1;
+}

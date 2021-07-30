@@ -11,6 +11,14 @@ interface IReport {
   id: string
 }
 
+type NodeToDestroy = IPrueba | Element | Node | null
+
+type NodeToAdd = Element | Node
+
+interface IPrueba {
+  children: HTMLCollectionOf<Element>
+}
+
 interface IClimate {
   base: String
   clouds: Object
@@ -66,4 +74,7 @@ export {
   ILatLong,
   MaybeILatLong,
   IReportedJokes,
+  IPrueba,
+  NodeToDestroy,
+  NodeToAdd,
 }
