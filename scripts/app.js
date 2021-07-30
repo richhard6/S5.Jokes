@@ -57,7 +57,16 @@ var title = document.querySelector('.titlejoke');
 var ratedContainer = document.querySelector('.rated-jokes');
 var jokeContainer = document.querySelector('.joke');
 var climaDiv = document.querySelector('.clima');
-button === null || button === void 0 ? void 0 : button.addEventListener('click', printRandomJoke);
+var apiSelector = document.querySelector('.apiSelector');
+/* apiSelector?.addEventListener('change', (e) => {
+  console.log(Boolean(e.target.value))
+  let flag: Boolean = e.target?.value === 'false' ? false : true
+  printRandomJoke(flag)
+}) */
+button === null || button === void 0 ? void 0 : button.addEventListener('click', function () {
+    var flag = (apiSelector === null || apiSelector === void 0 ? void 0 : apiSelector.value) === 'false' ? false : true;
+    printRandomJoke(flag);
+});
 var reportedJokes = [];
 function fetchRandomJoke() {
     var URL = 'https://icanhazdadjoke.com';
@@ -72,15 +81,32 @@ function fetchRandomJoke() {
         .then(function (data) { return data; });
     return jokes;
 }
-function printRandomJoke() {
+function jokeFetchAnotherAPI() {
+    var URL = 'https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single';
+    var jokes = fetch(URL)
+        .then(function (res) { return res.json(); })
+        .then(function (data) { return data; });
+    return jokes;
+}
+function printRandomJoke(selector) {
+    if (selector === void 0) { selector = true; }
     return __awaiter(this, void 0, void 0, function () {
-        var jokeObj, id, joke, today, jokeReport, setPoint, buttonContainer, buttonContainerDOM, classesForButtonContainer, classesToAdd, checkIfJoke, jokeInDOM, textJoke;
-        var _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, fetchRandomJoke()];
+        var jokeObj, _a, id, joke, today, jokeReport, setPoint, buttonContainer, buttonContainerDOM, classesForButtonContainer, classesToAdd, checkIfJoke, jokeInDOM, textJoke;
+        var _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    if (!(selector === true)) return [3 /*break*/, 2];
+                    return [4 /*yield*/, fetchRandomJoke()];
                 case 1:
-                    jokeObj = _b.sent();
+                    _a = _c.sent();
+                    return [3 /*break*/, 4];
+                case 2: return [4 /*yield*/, jokeFetchAnotherAPI()];
+                case 3:
+                    _a = _c.sent();
+                    _c.label = 4;
+                case 4:
+                    jokeObj = _a;
                     id = jokeObj.id, joke = jokeObj.joke;
                     today = new Date(Date.now()).toISOString();
                     jokeReport = {
@@ -100,7 +126,7 @@ function printRandomJoke() {
                         'mt-3',
                         'mb-3',
                     ];
-                    buttonContainer === null || buttonContainer === void 0 ? void 0 : (_a = buttonContainer.classList).add.apply(_a, classesForButtonContainer);
+                    buttonContainer === null || buttonContainer === void 0 ? void 0 : (_b = buttonContainer.classList).add.apply(_b, classesForButtonContainer);
                     classesToAdd = ['button', 'is-info', 'mb-2', 'mr-2'];
                     if (buttonContainerDOM)
                         containerJoke === null || containerJoke === void 0 ? void 0 : containerJoke.replaceChild(buttonContainer, buttonContainerDOM);
@@ -152,7 +178,6 @@ function generateReport(joke) {
         reportedJokes = __spreadArray(__spreadArray([], reportedJokes.slice(0, flag)), restJokes);
         printRatedJokes(reportedJokes);
     }
-    console.log(reportedJokes);
 }
 function getCurrentWeather(callback) {
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -204,23 +229,21 @@ function processCurrentWeather(currentWeather) {
 }
 function printCurrentWeather(_a) {
     //a dt le faltan 3 numeros y no da la fecha bien...
-    var name = _a.name, feels_like = _a.feels_like, temp = _a.temp, temp_max = _a.temp_max, temp_min = _a.temp_min, id = _a.id, main = _a.main, description = _a.description, icon = _a.icon;
     //seria bueno hcer un cacheo de la informcion principal y la date actualizarrla dinamicamente sin tener que pedirla a la API
-    //falta formatearla bien
+    var name = _a.name, feels_like = _a.feels_like, temp = _a.temp, temp_max = _a.temp_max, temp_min = _a.temp_min, id = _a.id, main = _a.main, description = _a.description, icon = _a.icon;
     var iconCode = "http://openweathermap.org/img/w/" + icon + ".png";
     climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.setAttribute('style', "background-image:url(" + iconCode + "); background-size: 20%; background-repeat:no-repeat;background-position: right center");
     var html = "\n      <h2 class=\"is-size-3\"> \n          " + name + "\n      </h2>\n    \n      <small>\n           " + todayDate + "\n      </small>\n\n      <h4>\n          " + main + "\n      </h4>\n\n      <p class=\"is-size-4\">\n          " + temp + "\u00B0\n      </p>\n\n      <p class=\"is-size-7\">\n          Feels like: " + feels_like + "\u00B0\n      </p>\n\n      <p class=\"is-size-6\">\n          " + temp_min + "\u00B0 / " + temp_max + "\u00B0\n      </p>\n  ";
-    climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.insertAdjacentHTML('beforeend', html);
+    climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.insertAdjacentHTML('beforeend', html); //actualizar reloj.
 }
-//reduce filter y sort
 function printRatedJokes(reportedJokes) {
     var reducer = function (obj, val) {
         console.log(obj);
-        if (obj[val.id] == null) {
-            obj[val.id] = __assign({}, val);
+        if (obj[val.id.toString()] == null) {
+            obj[val.id.toString()] = __assign({}, val);
         }
         else {
-            obj[val.id] = __assign(__assign({}, val), val.points);
+            obj[val.id.toString()] = __assign(__assign({}, val), val.points); //revisar si doble spread es necesario
         }
         return obj;
     };
@@ -232,14 +255,14 @@ function printRatedJokes(reportedJokes) {
         if (Object.prototype.hasOwnProperty.call(html, id)) {
             var joke_1 = html[id]; //refactor deconstruction
             console.log(joke_1.joke, joke_1.points, joke_1.date, joke_1.id);
-            var htmlInDOM = "\n      <div class=\"panel-block is-active isThere\" data-id=\"" + joke_1.id + "\">\n<div class=\"dropdown is-hoverable\">\n<div class=\"dropdown-trigger\">\n  <button\n    class=\"button\"\n    aria-haspopup=\"true\"\n    aria-controls=\"dropdown-menu4\"\n  >\n    <span>" + joke_1.id + "</span>\n    <span class=\"icon is-small\">\n      <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>\n    </span>\n  </button>\n</div>\n<div class=\"dropdown-menu\" id=\"dropdown-menu4\" role=\"menu\">\n  <div class=\"dropdown-content\">\n    <div class=\"dropdown-item\">\n      <p>\n     " + joke_1.joke + "\n      </p>\n      <span>\u2B50\uFE0F " + joke_1.points + "</span>\n    </div>\n  </div>\n</div>\n</div>\n</div>\n";
+            var htmlInDOM = "\n      <div class=\"panel-block is-active isThere\" data-id=\"" + joke_1.id + "\">\n        <div class=\"dropdown is-hoverable\">\n        <div class=\"dropdown-trigger\">\n          <button\n            class=\"button\"\n            aria-haspopup=\"true\"\n            aria-controls=\"dropdown-menu4\"\n          >\n            <span>" + joke_1.id + "</span>\n            <span class=\"icon is-small\">\n              <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>\n            </span>\n          </button>\n        </div>\n        <div class=\"dropdown-menu\" id=\"dropdown-menu4\" role=\"menu\">\n          <div class=\"dropdown-content\">\n            <div class=\"dropdown-item\">\n              <p>\n            " + joke_1.joke + "\n              </p>\n              <span>\u2B50\uFE0F " + joke_1.points + "</span>\n            </div>\n          </div>\n        </div>\n        </div>\n        </div>\n        ";
             var parsedHTML = new DOMParser().parseFromString(htmlInDOM, 'text/html');
             var savedJokes = document.querySelectorAll('.isThere');
             var jokeToAdd = parsedHTML.documentElement.querySelector('.isThere');
             ratedContainer === null || ratedContainer === void 0 ? void 0 : ratedContainer.appendChild(jokeToAdd);
             if (savedJokes) {
                 Array.from(savedJokes)
-                    .filter(function (jok) { return jok.dataset.id === joke_1.id; })
+                    .filter(function (jok) { return jok.dataset.id === joke_1.id.toString(); })
                     .map(function (jokeFiltered) {
                     console.log(jokeFiltered.dataset.id, 'sad');
                     var coincidence = document.querySelector("[data-id=\"" + jokeFiltered.dataset.id + "\"]");

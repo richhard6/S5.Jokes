@@ -1,14 +1,15 @@
 interface IJoke {
-  id: string
+  id: string | Number
   joke: string
   status: number
+  category?: string
 }
 
 interface IReport {
   joke: String
   date: string
   points: Number
-  id: string
+  id: string | Number
 }
 
 type NodeToDestroy = IPrueba | Element | Node | null
@@ -64,6 +65,21 @@ interface IReportedJokes {
   string: Object
 }
 
+interface IAnotherJoke {
+  category: string
+  joke: string
+  id: Number
+}
+
+type Joke = IReport | IAnotherReported
+
+interface IAnotherReported {
+  joke: string
+  points: Number
+  id: Number
+  category: string
+}
+
 export {
   IJoke,
   IReport,
@@ -77,4 +93,7 @@ export {
   IPrueba,
   NodeToDestroy,
   NodeToAdd,
+  IAnotherJoke,
+  IAnotherReported,
+  Joke,
 }

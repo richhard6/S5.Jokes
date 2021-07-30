@@ -15,8 +15,18 @@ const title = document.querySelector<HTMLParagraphElement>('.titlejoke')
 const ratedContainer = document.querySelector<HTMLDivElement>('.rated-jokes')
 const jokeContainer = document.querySelector<HTMLDivElement>('.joke')
 const climaDiv = document.querySelector<HTMLDivElement>('.clima')
+const apiSelector = document.querySelector<HTMLSelectElement>('.apiSelector')
 
-button?.addEventListener('click', printRandomJoke)
+/* apiSelector?.addEventListener('change', (e) => {
+  console.log(Boolean(e.target.value))
+  let flag: Boolean = e.target?.value === 'false' ? false : true
+  printRandomJoke(flag)
+}) */
+
+button?.addEventListener('click', () => {
+  let flag: Boolean = apiSelector?.value === 'false' ? false : true
+  printRandomJoke(flag)
+})
 
 let reportedJokes: IReport[] = []
 
@@ -34,8 +44,20 @@ function fetchRandomJoke(): Promise<IJoke> {
   return jokes
 }
 
-async function printRandomJoke(): Promise<void> {
-  const jokeObj: IJoke = await fetchRandomJoke()
+function jokeFetchAnotherAPI(): Promise<IJoke> {
+  const URL: string =
+    'https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single'
+
+  const jokes: IJoke | Promise<IJoke> = fetch(URL)
+    .then((res) => res.json())
+    .then((data) => data)
+
+  return jokes
+}
+
+async function printRandomJoke(selector: Boolean = true): Promise<void> {
+  let jokeObj: IJoke =
+    selector === true ? await fetchRandomJoke() : await jokeFetchAnotherAPI()
 
   const { id, joke } = jokeObj
 
@@ -177,10 +199,7 @@ function printCurrentWeather({
   icon,
 }: IFormated): void {
   //a dt le faltan 3 numeros y no da la fecha bien...
-
   //seria bueno hcer un cacheo de la informcion principal y la date actualizarrla dinamicamente sin tener que pedirla a la API
-
-  //falta formatearla bien
 
   const iconCode: string = `http://openweathermap.org/img/w/${icon}.png`
 
@@ -221,10 +240,10 @@ function printCurrentWeather({
 function printRatedJokes(reportedJokes: IReport[]): void {
   const reducer = (obj: IReport[], val: IReport): IReport[] => {
     console.log(obj)
-    if (obj[val.id] == null) {
-      obj[val.id] = { ...val }
+    if (obj[val.id.toString()] == null) {
+      obj[val.id.toString()] = { ...val }
     } else {
-      obj[val.id] = { ...val, ...val.points } //revisar si doble spread es necesario
+      obj[val.id.toString()] = { ...val, ...val.points } //revisar si doble spread es necesario
     }
     return obj
   }
@@ -278,7 +297,7 @@ function printRatedJokes(reportedJokes: IReport[]): void {
 
       if (savedJokes) {
         Array.from(savedJokes)
-          .filter((jok) => jok.dataset.id === joke.id)
+          .filter((jok) => jok.dataset.id === joke.id.toString())
           .map((jokeFiltered) => {
             console.log(jokeFiltered.dataset.id, 'sad')
             const coincidence = document.querySelector<Element>(
