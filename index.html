@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Get Dad JOKES!</title>
+    <title>Get JOKES!</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
@@ -74,10 +74,27 @@
     >
       <div class="select">
         <!-- is-loading -->
-        <select class="apiSelector">
-          <option value="true">Dad Jokes</option>
-          <option value="false">Another API Jokes</option>
-        </select>
+
+        <div class="dropdown">
+          <div class="dropdown-trigger">
+            <button
+              class="button"
+              aria-haspopup="true"
+              aria-controls="dropdown-menu"
+            >
+              <span class="selectType">Select Joke API</span>
+              <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </button>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a data-value="true" class="dropdown-item">Dad Jokes</a>
+              <a data-value="false" class="dropdown-item">Another API Jokes</a>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="tile is-6 is-vertical is-parent tileContainer">
         <div class="tile is-parent">
@@ -90,9 +107,7 @@
               is-flex is-flex-direction-column
             "
           >
-            <p class="title titlejoke has-text-centered">
-              Ready to get dad jokes?
-            </p>
+            <p class="title titlejoke has-text-centered">Ready to get jokes?</p>
 
             <div class="joke"></div>
 

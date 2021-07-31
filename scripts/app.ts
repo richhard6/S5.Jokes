@@ -15,16 +15,41 @@ const title = document.querySelector<HTMLParagraphElement>('.titlejoke')
 const ratedContainer = document.querySelector<HTMLDivElement>('.rated-jokes')
 const jokeContainer = document.querySelector<HTMLDivElement>('.joke')
 const climaDiv = document.querySelector<HTMLDivElement>('.clima')
-const apiSelector = document.querySelector<HTMLSelectElement>('.apiSelector')
 
-/* apiSelector?.addEventListener('change', (e) => {
-  console.log(Boolean(e.target.value))
-  let flag: Boolean = e.target?.value === 'false' ? false : true
-  printRandomJoke(flag)
-}) */
+const select = document.querySelectorAll<HTMLDivElement>('.dropdown-item')
+const dropdown = document.querySelector<HTMLDivElement>('.dropdown')
+const selectValue = document.querySelector<HTMLDivElement>('.dropdown-content')
+
+const selectType = document.querySelector<HTMLSpanElement>('.selectType')
+
+//arreglar que cuando le das fuera del Select. se deseeleccione
+
+dropdown?.addEventListener('click', (e) =>
+  dropdown.classList.toggle('is-active')
+)
+
+select.forEach((element) => {
+  element.addEventListener('click', () => {
+    console.log(element.dataset.value)
+
+    element.parentElement!.dataset.value = element.dataset.value
+
+    if (selectValue?.dataset.value === 'true') {
+      select[1].classList.remove('is-active')
+      select[0].classList.add('is-active')
+      selectType!.textContent = select[0].textContent
+    }
+
+    if (selectValue?.dataset.value === 'false') {
+      select[0].classList.remove('is-active')
+      select[1].classList.add('is-active')
+      selectType!.textContent = select[1].textContent
+    }
+  })
+})
 
 button?.addEventListener('click', () => {
-  let flag: Boolean = apiSelector?.value === 'false' ? false : true
+  let flag: Boolean = selectValue?.dataset.value === 'false' ? false : true
   printRandomJoke(flag)
 })
 

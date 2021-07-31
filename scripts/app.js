@@ -57,14 +57,32 @@ var title = document.querySelector('.titlejoke');
 var ratedContainer = document.querySelector('.rated-jokes');
 var jokeContainer = document.querySelector('.joke');
 var climaDiv = document.querySelector('.clima');
-var apiSelector = document.querySelector('.apiSelector');
-/* apiSelector?.addEventListener('change', (e) => {
-  console.log(Boolean(e.target.value))
-  let flag: Boolean = e.target?.value === 'false' ? false : true
-  printRandomJoke(flag)
-}) */
+var select = document.querySelectorAll('.dropdown-item');
+var dropdown = document.querySelector('.dropdown');
+var selectValue = document.querySelector('.dropdown-content');
+var selectType = document.querySelector('.selectType');
+//arreglar que cuando le das fuera del Select. se deseeleccione
+dropdown === null || dropdown === void 0 ? void 0 : dropdown.addEventListener('click', function (e) {
+    return dropdown.classList.toggle('is-active');
+});
+select.forEach(function (element) {
+    element.addEventListener('click', function () {
+        console.log(element.dataset.value);
+        element.parentElement.dataset.value = element.dataset.value;
+        if ((selectValue === null || selectValue === void 0 ? void 0 : selectValue.dataset.value) === 'true') {
+            select[1].classList.remove('is-active');
+            select[0].classList.add('is-active');
+            selectType.textContent = select[0].textContent;
+        }
+        if ((selectValue === null || selectValue === void 0 ? void 0 : selectValue.dataset.value) === 'false') {
+            select[0].classList.remove('is-active');
+            select[1].classList.add('is-active');
+            selectType.textContent = select[1].textContent;
+        }
+    });
+});
 button === null || button === void 0 ? void 0 : button.addEventListener('click', function () {
-    var flag = (apiSelector === null || apiSelector === void 0 ? void 0 : apiSelector.value) === 'false' ? false : true;
+    var flag = (selectValue === null || selectValue === void 0 ? void 0 : selectValue.dataset.value) === 'false' ? false : true;
     printRandomJoke(flag);
 });
 var reportedJokes = [];
