@@ -296,9 +296,10 @@ function printRatedJokes(reportedJokes) {
     var modalTrigger = document.querySelectorAll('.modalInfo');
     modalTrigger.forEach(function (button) {
         button.addEventListener('click', function (e) {
-            var _a;
-            var modalContent = (_a = e.target) === null || _a === void 0 ? void 0 : _a.parentNode.parentNode.parentNode.children[1].textContent;
-            createModal(modalContent);
+            var target = e.target;
+            var modalContent = target.parentNode.parentNode.parentNode.children[1].textContent;
+            if (modalContent)
+                createModal(modalContent);
         });
     });
 }
@@ -316,7 +317,6 @@ function createModal(modalContent) {
     modalClose === null || modalClose === void 0 ? void 0 : modalClose.addEventListener('click', function () {
         var _a;
         console.log(modalClose.parentElement);
-        //modalClose.parentNode.remove()
         (_a = modalClose.parentElement) === null || _a === void 0 ? void 0 : _a.remove();
     });
     console.log(points, content);

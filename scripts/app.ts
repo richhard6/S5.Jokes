@@ -6,6 +6,7 @@ import {
   MaybeILatLong,
   NodeToDestroy,
   NodeToAdd,
+  IModalContent,
 } from './interface'
 
 const todayDate: string = new Date(Date.now()).toLocaleString()
@@ -340,10 +341,11 @@ function printRatedJokes(reportedJokes: IReport[]): void {
 
   modalTrigger.forEach((button) => {
     button.addEventListener('click', (e) => {
+      const target: HTMLButtonElement = e.target as HTMLButtonElement
       const modalContent =
-        e.target?.parentNode.parentNode.parentNode.children[1].textContent
+        target!.parentNode!.parentNode!.parentNode!.children[1].textContent
 
-      createModal(modalContent)
+      if (modalContent) createModal(modalContent)
     })
   })
 }
@@ -372,7 +374,6 @@ function createModal(modalContent: string): void {
 
   modalClose?.addEventListener('click', () => {
     console.log(modalClose.parentElement)
-    //modalClose.parentNode.remove()
 
     modalClose.parentElement?.remove()
   })

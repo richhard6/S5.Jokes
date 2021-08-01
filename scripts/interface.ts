@@ -80,6 +80,10 @@ interface IAnotherReported {
   category: string
 }
 
+interface IModalContent {
+  target: HTMLButtonElement
+}
+
 export {
   IJoke,
   IReport,
@@ -96,4 +100,5 @@ export {
   IAnotherJoke,
   IAnotherReported,
   Joke,
+  IModalContent,
 }
