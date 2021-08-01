@@ -61,8 +61,7 @@ var select = document.querySelectorAll('.dropdown-item');
 var dropdown = document.querySelector('.dropdown');
 var selectValue = document.querySelector('.dropdown-content');
 var selectType = document.querySelector('.selectType');
-//arreglar que cuando le das fuera del Select. se deseeleccione
-dropdown === null || dropdown === void 0 ? void 0 : dropdown.addEventListener('click', function (e) {
+dropdown === null || dropdown === void 0 ? void 0 : dropdown.addEventListener('click', function () {
     return dropdown.classList.toggle('is-active');
 });
 select.forEach(function (element) {
@@ -145,7 +144,7 @@ function printRandomJoke(selector) {
                         'mb-3',
                     ];
                     buttonContainer === null || buttonContainer === void 0 ? void 0 : (_b = buttonContainer.classList).add.apply(_b, classesForButtonContainer);
-                    classesToAdd = ['button', 'is-info', 'mb-2', 'mr-2'];
+                    classesToAdd = ['button', 'is-info', 'mr-2', 'mt-4'];
                     if (buttonContainerDOM)
                         containerJoke === null || containerJoke === void 0 ? void 0 : containerJoke.replaceChild(buttonContainer, buttonContainerDOM);
                     setPoint.map(function (point) {
@@ -273,7 +272,7 @@ function printRatedJokes(reportedJokes) {
         if (Object.prototype.hasOwnProperty.call(html, id)) {
             var joke_1 = html[id]; //refactor deconstruction
             console.log(joke_1.joke, joke_1.points, joke_1.date, joke_1.id);
-            var htmlInDOM = "\n      <div class=\"panel-block is-active isThere\" data-id=\"" + joke_1.id + "\">\n        <div class=\"dropdown is-hoverable\">\n        <div class=\"dropdown-trigger\">\n          <button\n            class=\"button\"\n            aria-haspopup=\"true\"\n            aria-controls=\"dropdown-menu4\"\n          >\n            <span>" + joke_1.id + "</span>\n            <span class=\"icon is-small\">\n              <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>\n            </span>\n          </button>\n        </div>\n        <div class=\"dropdown-menu\" id=\"dropdown-menu4\" role=\"menu\">\n          <div class=\"dropdown-content\">\n            <div class=\"dropdown-item\">\n              <p>\n            " + joke_1.joke + "\n              </p>\n              <span>\u2B50\uFE0F " + joke_1.points + "</span>\n            </div>\n          </div>\n        </div>\n        </div>\n        </div>\n        ";
+            var htmlInDOM = "\n      <div class=\"panel-block is-active isThere\" data-id=\"" + joke_1.id + "\">\n        <div class=\"dropdown is-hoverable\">\n        <div class=\"dropdown-trigger\">\n          <button\n            class=\"button modalInfo\"\n            aria-haspopup=\"true\"\n            aria-controls=\"dropdown-menu4\"\n          >\n            <span>" + joke_1.id + "</span>\n            <span class=\"icon is-small\">\n              <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i> \n            </span>\n          </button>\n        </div>\n        <div class=\"dropdown-menu\" id=\"dropdown-menu4\" role=\"menu\">\n          <div class=\"dropdown-content\">\n            <div class=\"dropdown-item\">\n              <p>\n            " + joke_1.joke + "\n              </p>\n              <span>\u2B50\uFE0F " + joke_1.points + "</span>\n            </div>\n          </div>\n        </div>\n        </div>\n        </div>\n        ";
             var parsedHTML = new DOMParser().parseFromString(htmlInDOM, 'text/html');
             var savedJokes = document.querySelectorAll('.isThere');
             var jokeToAdd = parsedHTML.documentElement.querySelector('.isThere');
@@ -282,7 +281,6 @@ function printRatedJokes(reportedJokes) {
                 Array.from(savedJokes)
                     .filter(function (jok) { return jok.dataset.id === joke_1.id.toString(); })
                     .map(function (jokeFiltered) {
-                    console.log(jokeFiltered.dataset.id, 'sad');
                     var coincidence = document.querySelector("[data-id=\"" + jokeFiltered.dataset.id + "\"]");
                     if (coincidence) {
                         var definitiva = coincidence === null || coincidence === void 0 ? void 0 : coincidence.children[0].parentNode;
@@ -295,6 +293,33 @@ function printRatedJokes(reportedJokes) {
     for (var id in html) {
         _loop_1(id);
     }
+    var modalTrigger = document.querySelectorAll('.modalInfo');
+    modalTrigger.forEach(function (button) {
+        button.addEventListener('click', function (e) {
+            var _a;
+            var modalContent = (_a = e.target) === null || _a === void 0 ? void 0 : _a.parentNode.parentNode.parentNode.children[1].textContent;
+            createModal(modalContent);
+        });
+    });
+}
+function createModal(modalContent) {
+    var formatedContent = modalContent
+        .trim()
+        .split(' ')
+        .filter(function (content) { return content; });
+    var points = formatedContent.slice(-1)[0];
+    var content = formatedContent.slice(0, -2).join(' ');
+    var html = "<div class=\"modal is-active\">\n  <div class=\"modal-background\"></div>\n  <div class=\"modal-content\">\n " + content + "  \u2B50\uFE0F " + points + "\n  </div>\n  <button class=\"modal-close is-large\" aria-label=\"close\"></button>\n</div>";
+    var body = document.querySelector('body');
+    body === null || body === void 0 ? void 0 : body.insertAdjacentHTML('beforeend', html);
+    var modalClose = body === null || body === void 0 ? void 0 : body.querySelector('.modal-close');
+    modalClose === null || modalClose === void 0 ? void 0 : modalClose.addEventListener('click', function () {
+        var _a;
+        console.log(modalClose.parentElement);
+        //modalClose.parentNode.remove()
+        (_a = modalClose.parentElement) === null || _a === void 0 ? void 0 : _a.remove();
+    });
+    console.log(points, content);
 }
 getCurrentWeather(function (latLong) { return latLong; });
 export {};

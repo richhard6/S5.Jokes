@@ -22,9 +22,7 @@ const selectValue = document.querySelector<HTMLDivElement>('.dropdown-content')
 
 const selectType = document.querySelector<HTMLSpanElement>('.selectType')
 
-//arreglar que cuando le das fuera del Select. se deseeleccione
-
-dropdown?.addEventListener('click', (e) =>
+dropdown?.addEventListener('click', () =>
   dropdown.classList.toggle('is-active')
 )
 
@@ -113,7 +111,7 @@ async function printRandomJoke(selector: Boolean = true): Promise<void> {
 
   buttonContainer?.classList.add(...classesForButtonContainer)
 
-  const classesToAdd: string[] = ['button', 'is-info', 'mb-2', 'mr-2']
+  const classesToAdd: string[] = ['button', 'is-info', 'mr-2', 'mt-4']
 
   if (buttonContainerDOM)
     containerJoke?.replaceChild(buttonContainer, buttonContainerDOM)
@@ -288,13 +286,13 @@ function printRatedJokes(reportedJokes: IReport[]): void {
         <div class="dropdown is-hoverable">
         <div class="dropdown-trigger">
           <button
-            class="button"
+            class="button modalInfo"
             aria-haspopup="true"
             aria-controls="dropdown-menu4"
           >
             <span>${joke.id}</span>
             <span class="icon is-small">
-              <i class="fas fa-angle-down" aria-hidden="true"></i>
+              <i class="fas fa-angle-down" aria-hidden="true"></i> 
             </span>
           </button>
         </div>
@@ -324,7 +322,6 @@ function printRatedJokes(reportedJokes: IReport[]): void {
         Array.from(savedJokes)
           .filter((jok) => jok.dataset.id === joke.id.toString())
           .map((jokeFiltered) => {
-            console.log(jokeFiltered.dataset.id, 'sad')
             const coincidence = document.querySelector<Element>(
               `[data-id="${jokeFiltered.dataset.id}"]`
             )
@@ -337,6 +334,50 @@ function printRatedJokes(reportedJokes: IReport[]): void {
       }
     }
   }
+
+  const modalTrigger =
+    document.querySelectorAll<HTMLButtonElement>('.modalInfo')
+
+  modalTrigger.forEach((button) => {
+    button.addEventListener('click', (e) => {
+      const modalContent =
+        e.target?.parentNode.parentNode.parentNode.children[1].textContent
+
+      createModal(modalContent)
+    })
+  })
+}
+
+function createModal(modalContent: string): void {
+  const formatedContent = modalContent
+    .trim()
+    .split(' ')
+    .filter((content) => content)
+  const [points] = formatedContent.slice(-1)
+  const content: string = formatedContent.slice(0, -2).join(' ')
+
+  const html: string = `<div class="modal is-active">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+ ${content}  ⭐️ ${points}
+  </div>
+  <button class="modal-close is-large" aria-label="close"></button>
+</div>`
+
+  const body = document.querySelector<HTMLBodyElement>('body')
+
+  body?.insertAdjacentHTML('beforeend', html)
+
+  const modalClose = body?.querySelector<HTMLDivElement>('.modal-close')
+
+  modalClose?.addEventListener('click', () => {
+    console.log(modalClose.parentElement)
+    //modalClose.parentNode.remove()
+
+    modalClose.parentElement?.remove()
+  })
+
+  console.log(points, content)
 }
 
 getCurrentWeather((latLong: Promise<IClimate>) => latLong)
