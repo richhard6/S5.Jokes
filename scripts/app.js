@@ -102,7 +102,7 @@ function jokeFetchAnotherAPI() {
     var URL = 'https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single';
     var jokes = fetch(URL)
         .then(function (res) { return res.json(); })
-        .then(function (data) { return data; });
+        .then(function (data) { return (data = __assign(__assign({}, data), { id: data.id + 'q' })); });
     return jokes;
 }
 function printRandomJoke(selector) {
@@ -130,7 +130,7 @@ function printRandomJoke(selector) {
                         joke: joke,
                         date: today,
                         points: 1,
-                        id: id,
+                        id: id.toString(),
                     };
                     setPoint = ['1', '2', '3'];
                     buttonContainer = document.createElement('div');
@@ -297,6 +297,7 @@ function printRatedJokes(reportedJokes) {
     modalTrigger.forEach(function (button) {
         button.addEventListener('click', function (e) {
             var target = e.target;
+            //!! because im sure that it exists
             var modalContent = target.parentNode.parentNode.parentNode.children[1].textContent;
             if (modalContent)
                 createModal(modalContent);

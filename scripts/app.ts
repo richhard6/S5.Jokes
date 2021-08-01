@@ -74,7 +74,7 @@ function jokeFetchAnotherAPI(): Promise<IJoke> {
 
   const jokes: IJoke | Promise<IJoke> = fetch(URL)
     .then((res) => res.json())
-    .then((data) => data)
+    .then((data) => (data = { ...data, id: data.id + 'q' }))
 
   return jokes
 }
@@ -91,7 +91,7 @@ async function printRandomJoke(selector: Boolean = true): Promise<void> {
     joke: joke,
     date: today,
     points: 1,
-    id,
+    id: id.toString(),
   }
 
   let setPoint: string[] = ['1', '2', '3']
@@ -342,6 +342,8 @@ function printRatedJokes(reportedJokes: IReport[]): void {
   modalTrigger.forEach((button) => {
     button.addEventListener('click', (e) => {
       const target: HTMLButtonElement = e.target as HTMLButtonElement
+
+      //!! because im sure that it exists
       const modalContent =
         target!.parentNode!.parentNode!.parentNode!.children[1].textContent
 
