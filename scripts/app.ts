@@ -6,7 +6,6 @@ import {
   MaybeILatLong,
   NodeToDestroy,
   NodeToAdd,
-  IModalContent,
 } from './interface'
 
 const todayDate: string = new Date(Date.now()).toLocaleString()
