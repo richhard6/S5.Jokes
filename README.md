@@ -9,3 +9,5 @@ In the left side panel you get climate information about your current zone, make
 
 I'm developing it with Bulma for the CSS and TypeScript.
 
+Working on more features . . . 
+
