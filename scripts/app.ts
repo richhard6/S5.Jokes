@@ -216,9 +216,7 @@ function printCurrentWeather({
   temp,
   temp_max,
   temp_min,
-  id,
   main,
-  description,
   icon,
 }: IFormated): void {
   //a dt le faltan 3 numeros y no da la fecha bien...
@@ -342,7 +340,6 @@ function printRatedJokes(reportedJokes: IReport[]): void {
     button.addEventListener('click', (e) => {
       const target: HTMLButtonElement = e.target as HTMLButtonElement
 
-      //!! because im sure that it exists
       const modalContent =
         target!.parentNode!.parentNode!.parentNode!.children[1].textContent
 
