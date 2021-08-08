@@ -61,12 +61,12 @@ var select = document.querySelectorAll('.dropdown-item');
 var dropdown = document.querySelector('.dropdown');
 var selectValue = document.querySelector('.dropdown-content');
 var selectType = document.querySelector('.selectType');
-dropdown === null || dropdown === void 0 ? void 0 : dropdown.addEventListener('click', function () {
-    return dropdown.classList.toggle('is-active');
+dropdown === null || dropdown === void 0 ? void 0 : dropdown.addEventListener('click', function (e) {
+    dropdown.classList.toggle('is-active');
+    console.log(e);
 });
 select.forEach(function (element) {
     element.addEventListener('click', function () {
-        console.log(element.dataset.value);
         element.parentElement.dataset.value = element.dataset.value;
         if ((selectValue === null || selectValue === void 0 ? void 0 : selectValue.dataset.value) === 'true') {
             select[1].classList.remove('is-active');
@@ -247,7 +247,7 @@ function processCurrentWeather(currentWeather) {
 function printCurrentWeather(_a) {
     //a dt le faltan 3 numeros y no da la fecha bien...
     //seria bueno hcer un cacheo de la informcion principal y la date actualizarrla dinamicamente sin tener que pedirla a la API
-    var name = _a.name, feels_like = _a.feels_like, temp = _a.temp, temp_max = _a.temp_max, temp_min = _a.temp_min, id = _a.id, main = _a.main, description = _a.description, icon = _a.icon;
+    var name = _a.name, feels_like = _a.feels_like, temp = _a.temp, temp_max = _a.temp_max, temp_min = _a.temp_min, main = _a.main, icon = _a.icon;
     var iconCode = "http://openweathermap.org/img/w/" + icon + ".png";
     climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.setAttribute('style', "background-image:url(" + iconCode + "); background-size: 20%; background-repeat:no-repeat;background-position: right center");
     var html = "\n      <h2 class=\"is-size-3\"> \n          " + name + "\n      </h2>\n    \n      <small>\n           " + todayDate + "\n      </small>\n\n      <h4>\n          " + main + "\n      </h4>\n\n      <p class=\"is-size-4\">\n          " + temp + "\u00B0\n      </p>\n\n      <p class=\"is-size-7\">\n          Feels like: " + feels_like + "\u00B0\n      </p>\n\n      <p class=\"is-size-6\">\n          " + temp_min + "\u00B0 / " + temp_max + "\u00B0\n      </p>\n  ";
@@ -268,18 +268,17 @@ function printRatedJokes(reportedJokes) {
         .map(function (reportedJoke) { return reportedJoke; })
         .sort(function (a, b) { return (new Date(a.date) > new Date(b.date) ? -1 : 1); })
         .reduce(reducer, []);
-    var _loop_1 = function (id) {
-        if (Object.prototype.hasOwnProperty.call(html, id)) {
-            var joke_1 = html[id]; //refactor deconstruction
-            console.log(joke_1.joke, joke_1.points, joke_1.date, joke_1.id);
-            var htmlInDOM = "\n      <div class=\"panel-block is-active isThere\" data-id=\"" + joke_1.id + "\">\n        <div class=\"dropdown is-hoverable\">\n        <div class=\"dropdown-trigger\">\n          <button\n            class=\"button modalInfo\"\n            aria-haspopup=\"true\"\n            aria-controls=\"dropdown-menu4\"\n          >\n            <span>" + joke_1.id + "</span>\n            <span class=\"icon is-small\">\n              <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i> \n            </span>\n          </button>\n        </div>\n        <div class=\"dropdown-menu\" id=\"dropdown-menu4\" role=\"menu\">\n          <div class=\"dropdown-content\">\n            <div class=\"dropdown-item\">\n              <p>\n            " + joke_1.joke + "\n              </p>\n              <span>\u2B50\uFE0F " + joke_1.points + "</span>\n            </div>\n          </div>\n        </div>\n        </div>\n        </div>\n        ";
+    var _loop_1 = function (identifier) {
+        if (Object.prototype.hasOwnProperty.call(html, identifier)) {
+            var _a = html[identifier], id_1 = _a.id, joke = _a.joke, points = _a.points; //refactor deconstruction
+            var htmlInDOM = "\n      <div class=\"panel-block is-active isThere\" data-id=\"" + id_1 + "\">\n        <div class=\"dropdown is-hoverable\">\n        <div class=\"dropdown-trigger\">\n          <button\n            class=\"button modalInfo\"\n            aria-haspopup=\"true\"\n            aria-controls=\"dropdown-menu4\"\n          >\n            <span>" + id_1 + "</span>\n            <span class=\"icon is-small\">\n              <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i> \n            </span>\n          </button>\n        </div>\n        <div class=\"dropdown-menu\" id=\"dropdown-menu4\" role=\"menu\">\n          <div class=\"dropdown-content\">\n            <div class=\"dropdown-item\">\n              <p>\n            " + joke + "\n              </p>\n              <span>\u2B50\uFE0F " + points + "</span>\n            </div>\n          </div>\n        </div>\n        </div>\n        </div>\n        ";
             var parsedHTML = new DOMParser().parseFromString(htmlInDOM, 'text/html');
             var savedJokes = document.querySelectorAll('.isThere');
             var jokeToAdd = parsedHTML.documentElement.querySelector('.isThere');
             ratedContainer === null || ratedContainer === void 0 ? void 0 : ratedContainer.appendChild(jokeToAdd);
             if (savedJokes) {
                 Array.from(savedJokes)
-                    .filter(function (jok) { return jok.dataset.id === joke_1.id.toString(); })
+                    .filter(function (jok) { return jok.dataset.id === id_1.toString(); })
                     .map(function (jokeFiltered) {
                     var coincidence = document.querySelector("[data-id=\"" + jokeFiltered.dataset.id + "\"]");
                     if (coincidence) {
@@ -290,14 +289,13 @@ function printRatedJokes(reportedJokes) {
             }
         }
     };
-    for (var id in html) {
-        _loop_1(id);
+    for (var identifier in html) {
+        _loop_1(identifier);
     }
     var modalTrigger = document.querySelectorAll('.modalInfo');
     modalTrigger.forEach(function (button) {
         button.addEventListener('click', function (e) {
             var target = e.target;
-            //!! because im sure that it exists
             var modalContent = target.parentNode.parentNode.parentNode.children[1].textContent;
             if (modalContent)
                 createModal(modalContent);
@@ -311,14 +309,19 @@ function createModal(modalContent) {
         .filter(function (content) { return content; });
     var points = formatedContent.slice(-1)[0];
     var content = formatedContent.slice(0, -2).join(' ');
-    var html = "<div class=\"modal is-active\">\n  <div class=\"modal-background\"></div>\n  <div class=\"modal-content\">\n " + content + "  \u2B50\uFE0F " + points + "\n  </div>\n  <button class=\"modal-close is-large\" aria-label=\"close\"></button>\n</div>";
+    var html = "<div class=\"modal is-active\">\n  <div class=\"modal-background\"></div>\n  <div class=\"modal-content p-2\">\n  <button class=\"modal-close is-large m-3 modality\" aria-label=\"close\"></button>\n\n " + content + "  \u2B50\uFE0F " + points + "\n  </div>\n</div>";
     var body = document.querySelector('body');
     body === null || body === void 0 ? void 0 : body.insertAdjacentHTML('beforeend', html);
     var modalClose = body === null || body === void 0 ? void 0 : body.querySelector('.modal-close');
+    var modalBackground = body === null || body === void 0 ? void 0 : body.querySelector('.modal-background');
+    modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.addEventListener('click', function () {
+        var _a, _b;
+        (_b = (_a = modalClose === null || modalClose === void 0 ? void 0 : modalClose.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.remove();
+    });
     modalClose === null || modalClose === void 0 ? void 0 : modalClose.addEventListener('click', function () {
-        var _a;
+        var _a, _b;
         console.log(modalClose.parentElement);
-        (_a = modalClose.parentElement) === null || _a === void 0 ? void 0 : _a.remove();
+        (_b = (_a = modalClose.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.remove();
     });
     console.log(points, content);
 }

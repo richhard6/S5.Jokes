@@ -15,21 +15,18 @@ const title = document.querySelector<HTMLParagraphElement>('.titlejoke')
 const ratedContainer = document.querySelector<HTMLDivElement>('.rated-jokes')
 const jokeContainer = document.querySelector<HTMLDivElement>('.joke')
 const climaDiv = document.querySelector<HTMLDivElement>('.clima')
-
 const select = document.querySelectorAll<HTMLDivElement>('.dropdown-item')
 const dropdown = document.querySelector<HTMLDivElement>('.dropdown')
 const selectValue = document.querySelector<HTMLDivElement>('.dropdown-content')
-
 const selectType = document.querySelector<HTMLSpanElement>('.selectType')
 
-dropdown?.addEventListener('click', () =>
+dropdown?.addEventListener('click', (e) => {
   dropdown.classList.toggle('is-active')
-)
+  console.log(e)
+})
 
 select.forEach((element) => {
   element.addEventListener('click', () => {
-    console.log(element.dataset.value)
-
     element.parentElement!.dataset.value = element.dataset.value
 
     if (selectValue?.dataset.value === 'true') {
@@ -274,13 +271,12 @@ function printRatedJokes(reportedJokes: IReport[]): void {
     .sort((a, b) => (new Date(a.date) > new Date(b.date) ? -1 : 1))
     .reduce(reducer, [])
 
-  for (const id in html) {
-    if (Object.prototype.hasOwnProperty.call(html, id)) {
-      const joke = html[id] //refactor deconstruction
-      console.log(joke.joke, joke.points, joke.date, joke.id)
+  for (const identifier in html) {
+    if (Object.prototype.hasOwnProperty.call(html, identifier)) {
+      const { id, joke, points } = html[identifier] //refactor deconstruction
 
       const htmlInDOM: string = `
-      <div class="panel-block is-active isThere" data-id="${joke.id}">
+      <div class="panel-block is-active isThere" data-id="${id}">
         <div class="dropdown is-hoverable">
         <div class="dropdown-trigger">
           <button
@@ -288,7 +284,7 @@ function printRatedJokes(reportedJokes: IReport[]): void {
             aria-haspopup="true"
             aria-controls="dropdown-menu4"
           >
-            <span>${joke.id}</span>
+            <span>${id}</span>
             <span class="icon is-small">
               <i class="fas fa-angle-down" aria-hidden="true"></i> 
             </span>
@@ -298,9 +294,9 @@ function printRatedJokes(reportedJokes: IReport[]): void {
           <div class="dropdown-content">
             <div class="dropdown-item">
               <p>
-            ${joke.joke}
+            ${joke}
               </p>
-              <span>⭐️ ${joke.points}</span>
+              <span>⭐️ ${points}</span>
             </div>
           </div>
         </div>
@@ -318,7 +314,7 @@ function printRatedJokes(reportedJokes: IReport[]): void {
 
       if (savedJokes) {
         Array.from(savedJokes)
-          .filter((jok) => jok.dataset.id === joke.id.toString())
+          .filter((jok) => jok.dataset.id === id.toString())
           .map((jokeFiltered) => {
             const coincidence = document.querySelector<Element>(
               `[data-id="${jokeFiltered.dataset.id}"]`
@@ -358,10 +354,11 @@ function createModal(modalContent: string): void {
 
   const html: string = `<div class="modal is-active">
   <div class="modal-background"></div>
-  <div class="modal-content">
+  <div class="modal-content p-2">
+  <button class="modal-close is-large m-3 modality" aria-label="close"></button>
+
  ${content}  ⭐️ ${points}
   </div>
-  <button class="modal-close is-large" aria-label="close"></button>
 </div>`
 
   const body = document.querySelector<HTMLBodyElement>('body')
@@ -370,10 +367,17 @@ function createModal(modalContent: string): void {
 
   const modalClose = body?.querySelector<HTMLDivElement>('.modal-close')
 
+  const modalBackground =
+    body?.querySelector<HTMLDivElement>('.modal-background')
+
+  modalBackground?.addEventListener('click', () => {
+    modalClose?.parentElement?.parentElement?.remove()
+  })
+
   modalClose?.addEventListener('click', () => {
     console.log(modalClose.parentElement)
 
-    modalClose.parentElement?.remove()
+    modalClose.parentElement?.parentElement?.remove()
   })
 
   console.log(points, content)

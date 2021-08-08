@@ -29,4 +29,31 @@
 
 .modal-content {
   background-color: white;
+  min-width: 400px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  position: relative;
+}
+
+.modality {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.modal-close {
+  background-color: rgba(0, 0, 0, 0.502);
+  transition: background-color 0.2s ease-in;
+}
+
+.modal-close:hover {
+  background-color: black;
+}
+
+.dropdown-item > * {
+  z-index: 1111;
 }
