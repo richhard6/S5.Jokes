@@ -20,9 +20,8 @@ const dropdown = document.querySelector<HTMLDivElement>('.dropdown')
 const selectValue = document.querySelector<HTMLDivElement>('.dropdown-content')
 const selectType = document.querySelector<HTMLSpanElement>('.selectType')
 
-dropdown?.addEventListener('click', (e) => {
+dropdown?.addEventListener('click', () => {
   dropdown.classList.toggle('is-active')
-  console.log(e)
 })
 
 select.forEach((element) => {
@@ -216,7 +215,6 @@ function printCurrentWeather({
   main,
   icon,
 }: IFormated): void {
-  //a dt le faltan 3 numeros y no da la fecha bien...
   //seria bueno hcer un cacheo de la informcion principal y la date actualizarrla dinamicamente sin tener que pedirla a la API
 
   const iconCode: string = `http://openweathermap.org/img/w/${icon}.png`
@@ -273,7 +271,7 @@ function printRatedJokes(reportedJokes: IReport[]): void {
 
   for (const identifier in html) {
     if (Object.prototype.hasOwnProperty.call(html, identifier)) {
-      const { id, joke, points } = html[identifier] //refactor deconstruction
+      const { id, joke, points } = html[identifier]
 
       const htmlInDOM: string = `
       <div class="panel-block is-active isThere" data-id="${id}">
@@ -370,17 +368,13 @@ function createModal(modalContent: string): void {
   const modalBackground =
     body?.querySelector<HTMLDivElement>('.modal-background')
 
-  modalBackground?.addEventListener('click', () => {
+  modalBackground?.addEventListener('click', (): void => {
     modalClose?.parentElement?.parentElement?.remove()
   })
 
-  modalClose?.addEventListener('click', () => {
-    console.log(modalClose.parentElement)
-
+  modalClose?.addEventListener('click', (): void => {
     modalClose.parentElement?.parentElement?.remove()
   })
-
-  console.log(points, content)
 }
 
 getCurrentWeather((latLong: Promise<IClimate>) => latLong)
