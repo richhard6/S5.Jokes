@@ -325,5 +325,29 @@ function createModal(modalContent) {
         (_b = (_a = modalClose.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.remove();
     });
 }
+function fetchGifs() {
+    var URL = 'https://api.giphy.com/v1/gifs/random?api_key=S2Z53q8aVQTgnvnR06bU81vfVTIigfQa&tag=funny&rating=g';
+    var gifs = fetch(URL)
+        .then(function (res) { return res.json(); })
+        .then(function (data) { return data.data; });
+    return gifs;
+}
+function printGifs() {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, slug, image_original_url, html, gifs;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, fetchGifs()];
+                case 1:
+                    _a = _b.sent(), slug = _a.slug, image_original_url = _a.image_original_url;
+                    html = "<img src=" + image_original_url + " alt=" + slug + "/>";
+                    gifs = document.querySelector('.gifs');
+                    gifs === null || gifs === void 0 ? void 0 : gifs.insertAdjacentHTML('beforeend', html);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+printGifs(); //ejecutar al darle click al siguiente Joke, interaccion al añadir un joke a la lista de rated, como unas estrellitas o algo.
 getCurrentWeather(function (latLong) { return latLong; });
 export {};

@@ -84,6 +84,11 @@ interface IModalContent {
   target: HTMLButtonElement
 }
 
+interface IGifs {
+  slug: string
+  image_original_url: string
+}
+
 export {
   IJoke,
   IReport,
@@ -101,4 +106,5 @@ export {
   IAnotherReported,
   Joke,
   IModalContent,
+  IGifs,
 }

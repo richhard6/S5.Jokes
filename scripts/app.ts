@@ -6,6 +6,7 @@ import {
   MaybeILatLong,
   NodeToDestroy,
   NodeToAdd,
+  IGifs,
 } from './interface'
 
 const todayDate: string = new Date(Date.now()).toLocaleString()
@@ -383,5 +384,27 @@ function createModal(modalContent: string): void {
     modalClose.parentElement?.parentElement?.remove()
   })
 }
+
+function fetchGifs(): Promise<IGifs> {
+  const URL: string =
+    'https://api.giphy.com/v1/gifs/random?api_key=S2Z53q8aVQTgnvnR06bU81vfVTIigfQa&tag=funny&rating=g'
+
+  const gifs: IGifs | Promise<IGifs> = fetch(URL)
+    .then((res) => res.json())
+    .then((data) => data.data)
+  return gifs
+}
+
+async function printGifs(): Promise<void> {
+  const { slug, image_original_url } = await fetchGifs()
+
+  const html = `<img src=${image_original_url} alt=${slug}/>`
+
+  const gifs = document.querySelector<HTMLDivElement>('.gifs')
+
+  gifs?.insertAdjacentHTML('beforeend', html)
+}
+
+printGifs() //ejecutar al darle click al siguiente Joke, interaccion al añadir un joke a la lista de rated, como unas estrellitas o algo.
 
 getCurrentWeather((latLong: Promise<IClimate>) => latLong)
