@@ -61,9 +61,8 @@ var select = document.querySelectorAll('.dropdown-item');
 var dropdown = document.querySelector('.dropdown');
 var selectValue = document.querySelector('.dropdown-content');
 var selectType = document.querySelector('.selectType');
-dropdown === null || dropdown === void 0 ? void 0 : dropdown.addEventListener('click', function (e) {
+dropdown === null || dropdown === void 0 ? void 0 : dropdown.addEventListener('click', function () {
     dropdown.classList.toggle('is-active');
-    console.log(e);
 });
 select.forEach(function (element) {
     element.addEventListener('click', function () {
@@ -197,6 +196,8 @@ function generateReport(joke) {
     }
 }
 function getCurrentWeather(callback) {
+    var loader = '<div class="lds-facebook"><div></div><div></div><div></div></div>';
+    climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.insertAdjacentHTML('beforeend', loader);
     navigator.geolocation.getCurrentPosition(function (position) {
         return callback(fetchCurrentWeather([position.coords.latitude, position.coords.longitude]));
     });
@@ -245,12 +246,13 @@ function processCurrentWeather(currentWeather) {
     });
 }
 function printCurrentWeather(_a) {
-    //a dt le faltan 3 numeros y no da la fecha bien...
     //seria bueno hcer un cacheo de la informcion principal y la date actualizarrla dinamicamente sin tener que pedirla a la API
     var name = _a.name, feels_like = _a.feels_like, temp = _a.temp, temp_max = _a.temp_max, temp_min = _a.temp_min, main = _a.main, icon = _a.icon;
+    var loader = document.querySelector('.lds-facebook');
     var iconCode = "http://openweathermap.org/img/w/" + icon + ".png";
     climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.setAttribute('style', "background-image:url(" + iconCode + "); background-size: 20%; background-repeat:no-repeat;background-position: right center");
     var html = "\n      <h2 class=\"is-size-3\"> \n          " + name + "\n      </h2>\n    \n      <small>\n           " + todayDate + "\n      </small>\n\n      <h4>\n          " + main + "\n      </h4>\n\n      <p class=\"is-size-4\">\n          " + temp + "\u00B0\n      </p>\n\n      <p class=\"is-size-7\">\n          Feels like: " + feels_like + "\u00B0\n      </p>\n\n      <p class=\"is-size-6\">\n          " + temp_min + "\u00B0 / " + temp_max + "\u00B0\n      </p>\n  ";
+    climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.removeChild(loader);
     climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.insertAdjacentHTML('beforeend', html); //actualizar reloj.
 }
 function printRatedJokes(reportedJokes) {
@@ -270,7 +272,7 @@ function printRatedJokes(reportedJokes) {
         .reduce(reducer, []);
     var _loop_1 = function (identifier) {
         if (Object.prototype.hasOwnProperty.call(html, identifier)) {
-            var _a = html[identifier], id_1 = _a.id, joke = _a.joke, points = _a.points; //refactor deconstruction
+            var _a = html[identifier], id_1 = _a.id, joke = _a.joke, points = _a.points;
             var htmlInDOM = "\n      <div class=\"panel-block is-active isThere\" data-id=\"" + id_1 + "\">\n        <div class=\"dropdown is-hoverable\">\n        <div class=\"dropdown-trigger\">\n          <button\n            class=\"button modalInfo\"\n            aria-haspopup=\"true\"\n            aria-controls=\"dropdown-menu4\"\n          >\n            <span>" + id_1 + "</span>\n            <span class=\"icon is-small\">\n              <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i> \n            </span>\n          </button>\n        </div>\n        <div class=\"dropdown-menu\" id=\"dropdown-menu4\" role=\"menu\">\n          <div class=\"dropdown-content\">\n            <div class=\"dropdown-item\">\n              <p>\n            " + joke + "\n              </p>\n              <span>\u2B50\uFE0F " + points + "</span>\n            </div>\n          </div>\n        </div>\n        </div>\n        </div>\n        ";
             var parsedHTML = new DOMParser().parseFromString(htmlInDOM, 'text/html');
             var savedJokes = document.querySelectorAll('.isThere');
@@ -320,10 +322,8 @@ function createModal(modalContent) {
     });
     modalClose === null || modalClose === void 0 ? void 0 : modalClose.addEventListener('click', function () {
         var _a, _b;
-        console.log(modalClose.parentElement);
         (_b = (_a = modalClose.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.remove();
     });
-    console.log(points, content);
 }
 getCurrentWeather(function (latLong) { return latLong; });
 export {};

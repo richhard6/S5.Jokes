@@ -166,6 +166,10 @@ function generateReport(joke: IReport): void {
 }
 
 function getCurrentWeather(callback: Function): void {
+  const loader: string =
+    '<div class="lds-facebook"><div></div><div></div><div></div></div>'
+
+  climaDiv?.insertAdjacentHTML('beforeend', loader)
   navigator.geolocation.getCurrentPosition((position): GeolocationPosition => {
     return callback(
       fetchCurrentWeather([position.coords.latitude, position.coords.longitude])
@@ -217,6 +221,8 @@ function printCurrentWeather({
 }: IFormated): void {
   //seria bueno hcer un cacheo de la informcion principal y la date actualizarrla dinamicamente sin tener que pedirla a la API
 
+  const loader = document.querySelector<HTMLDivElement>('.lds-facebook')
+
   const iconCode: string = `http://openweathermap.org/img/w/${icon}.png`
 
   climaDiv?.setAttribute(
@@ -250,6 +256,7 @@ function printCurrentWeather({
       </p>
   `
 
+  climaDiv?.removeChild(loader!)
   climaDiv?.insertAdjacentHTML('beforeend', html) //actualizar reloj.
 }
 
