@@ -81,6 +81,7 @@ select.forEach(function (element) {
 });
 button === null || button === void 0 ? void 0 : button.addEventListener('click', function () {
     var flag = (selectValue === null || selectValue === void 0 ? void 0 : selectValue.dataset.value) === 'false' ? false : true;
+    printGifs();
     printRandomJoke(flag);
 });
 var reportedJokes = [];
@@ -262,7 +263,7 @@ function printRatedJokes(reportedJokes) {
             obj[val.id.toString()] = __assign({}, val);
         }
         else {
-            obj[val.id.toString()] = __assign(__assign({}, val), val.points); //revisar si doble spread es necesario
+            obj[val.id.toString()] = __assign({ val: val }, val.points);
         }
         return obj;
     };
@@ -334,20 +335,23 @@ function fetchGifs() {
 }
 function printGifs() {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, slug, image_original_url, html, gifs;
+        var _a, slug, image_original_url, html, gifsCreated, gifs;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0: return [4 /*yield*/, fetchGifs()];
                 case 1:
                     _a = _b.sent(), slug = _a.slug, image_original_url = _a.image_original_url;
-                    html = "<img src=" + image_original_url + " alt=" + slug + "/>";
+                    html = "<img class=\"gif\" src=" + image_original_url + " alt=" + slug + "/>";
+                    gifsCreated = document.querySelector('.gif');
                     gifs = document.querySelector('.gifs');
+                    if (gifsCreated) {
+                        gifs === null || gifs === void 0 ? void 0 : gifs.removeChild(gifsCreated);
+                    }
                     gifs === null || gifs === void 0 ? void 0 : gifs.insertAdjacentHTML('beforeend', html);
                     return [2 /*return*/];
             }
         });
     });
 }
-printGifs(); //ejecutar al darle click al siguiente Joke, interaccion al añadir un joke a la lista de rated, como unas estrellitas o algo.
 getCurrentWeather(function (latLong) { return latLong; });
 export {};

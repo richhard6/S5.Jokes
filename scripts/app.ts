@@ -45,6 +45,7 @@ select.forEach((element) => {
 
 button?.addEventListener('click', () => {
   let flag: Boolean = selectValue?.dataset.value === 'false' ? false : true
+  printGifs()
   printRandomJoke(flag)
 })
 
@@ -267,7 +268,7 @@ function printRatedJokes(reportedJokes: IReport[]): void {
     if (obj[val.id.toString()] == null) {
       obj[val.id.toString()] = { ...val }
     } else {
-      obj[val.id.toString()] = { ...val, ...val.points } //revisar si doble spread es necesario
+      obj[val.id.toString()] = { val, ...val.points }
     }
     return obj
   }
@@ -398,13 +399,17 @@ function fetchGifs(): Promise<IGifs> {
 async function printGifs(): Promise<void> {
   const { slug, image_original_url } = await fetchGifs()
 
-  const html = `<img src=${image_original_url} alt=${slug}/>`
+  const html: string = `<img class="gif" src=${image_original_url} alt=${slug}/>`
+
+  const gifsCreated = document.querySelector<HTMLImageElement>('.gif')
 
   const gifs = document.querySelector<HTMLDivElement>('.gifs')
 
+  if (gifsCreated) {
+    gifs?.removeChild(gifsCreated)
+  }
+
   gifs?.insertAdjacentHTML('beforeend', html)
 }
-
-printGifs() //ejecutar al darle click al siguiente Joke, interaccion al añadir un joke a la lista de rated, como unas estrellitas o algo.
 
 getCurrentWeather((latLong: Promise<IClimate>) => latLong)
