@@ -64,6 +64,12 @@ var selectType = document.querySelector('.selectType');
 dropdown === null || dropdown === void 0 ? void 0 : dropdown.addEventListener('click', function () {
     dropdown.classList.toggle('is-active');
 });
+document.addEventListener('click', function (e) {
+    console.log(e);
+    if (!e.target.classList.contains('selectType')) {
+        dropdown === null || dropdown === void 0 ? void 0 : dropdown.classList.remove('is-active');
+    }
+});
 select.forEach(function (element) {
     element.addEventListener('click', function () {
         element.parentElement.dataset.value = element.dataset.value;

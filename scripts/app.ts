@@ -25,6 +25,13 @@ dropdown?.addEventListener('click', () => {
   dropdown.classList.toggle('is-active')
 })
 
+document.addEventListener('click', (e) => {
+  console.log(e)
+  if (!(e.target as HTMLDivElement).classList.contains('selectType')) {
+    dropdown?.classList.remove('is-active')
+  }
+})
+
 select.forEach((element) => {
   element.addEventListener('click', () => {
     element.parentElement!.dataset.value = element.dataset.value
