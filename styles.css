@@ -38,6 +38,11 @@
   position: relative;
 }
 
+.gifs {
+  max-height: 300px;
+  height: 300px;
+}
+
 .modality {
   position: absolute;
   top: 0;
@@ -48,6 +53,10 @@
 .modal-close {
   background-color: rgba(0, 0, 0, 0.502);
   transition: background-color 0.2s ease-in;
+}
+
+.weather {
+  max-height: 240px;
 }
 
 .modal-close:hover {
