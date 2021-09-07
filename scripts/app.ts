@@ -269,9 +269,8 @@ function printCurrentWeather({
   climaDiv?.insertAdjacentHTML('beforeend', html) //actualizar reloj.
 }
 
-function printRatedJokes(reportedJokes: IReport[]): void {
+async function printRatedJokes(reportedJokes: IReport[]): Promise<void> {
   const reducer = (obj: IReport[], val: IReport): IReport[] => {
-    console.log(obj)
     if (obj[val.id.toString()] == null) {
       obj[val.id.toString()] = { ...val }
     } else {
@@ -285,9 +284,13 @@ function printRatedJokes(reportedJokes: IReport[]): void {
     .sort((a, b) => (new Date(a.date) > new Date(b.date) ? -1 : 1))
     .reduce(reducer, [])
 
+  const { slug, image_original_url } = await fetchGifs()
+
   for (const identifier in html) {
     if (Object.prototype.hasOwnProperty.call(html, identifier)) {
       const { id, joke, points } = html[identifier]
+
+      //aqui es dnde tal
 
       const htmlInDOM: string = `
       <div class="panel-block is-active isThere" data-id="${id}">
@@ -311,6 +314,10 @@ function printRatedJokes(reportedJokes: IReport[]): void {
             ${joke}
               </p>
               <span>⭐️ ${points}</span>
+
+              <img src=${image_original_url} alt=${slug}/>
+
+              
             </div>
           </div>
         </div>
@@ -358,13 +365,14 @@ function printRatedJokes(reportedJokes: IReport[]): void {
   })
 }
 
-function createModal(modalContent: string): void {
+async function createModal(modalContent: string): Promise<void> {
   const formatedContent = modalContent
     .trim()
     .split(' ')
     .filter((content) => content)
   const [points] = formatedContent.slice(-1)
   const content: string = formatedContent.slice(0, -2).join(' ')
+  const { slug, image_original_url } = await fetchGifs()
 
   const html: string = `<div class="modal is-active">
   <div class="modal-background"></div>
@@ -372,6 +380,7 @@ function createModal(modalContent: string): void {
   <button class="modal-close is-large m-3 modality" aria-label="close"></button>
 
  ${content}  ⭐️ ${points}
+ <img src=${image_original_url} alt=${slug}/>
   </div>
 </div>`
 

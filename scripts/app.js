@@ -263,73 +263,97 @@ function printCurrentWeather(_a) {
     climaDiv === null || climaDiv === void 0 ? void 0 : climaDiv.insertAdjacentHTML('beforeend', html); //actualizar reloj.
 }
 function printRatedJokes(reportedJokes) {
-    var reducer = function (obj, val) {
-        console.log(obj);
-        if (obj[val.id.toString()] == null) {
-            obj[val.id.toString()] = __assign({}, val);
-        }
-        else {
-            obj[val.id.toString()] = __assign({ val: val }, val.points);
-        }
-        return obj;
-    };
-    var html = reportedJokes
-        .map(function (reportedJoke) { return reportedJoke; })
-        .sort(function (a, b) { return (new Date(a.date) > new Date(b.date) ? -1 : 1); })
-        .reduce(reducer, []);
-    var _loop_1 = function (identifier) {
-        if (Object.prototype.hasOwnProperty.call(html, identifier)) {
-            var _a = html[identifier], id_1 = _a.id, joke = _a.joke, points = _a.points;
-            var htmlInDOM = "\n      <div class=\"panel-block is-active isThere\" data-id=\"" + id_1 + "\">\n        <div class=\"dropdown is-hoverable\">\n        <div class=\"dropdown-trigger\">\n          <button\n            class=\"button modalInfo\"\n            aria-haspopup=\"true\"\n            aria-controls=\"dropdown-menu4\"\n          >\n            <span>" + id_1 + "</span>\n            <span class=\"icon is-small\">\n              <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i> \n            </span>\n          </button>\n        </div>\n        <div class=\"dropdown-menu\" id=\"dropdown-menu4\" role=\"menu\">\n          <div class=\"dropdown-content\">\n            <div class=\"dropdown-item\">\n              <p>\n            " + joke + "\n              </p>\n              <span>\u2B50\uFE0F " + points + "</span>\n            </div>\n          </div>\n        </div>\n        </div>\n        </div>\n        ";
-            var parsedHTML = new DOMParser().parseFromString(htmlInDOM, 'text/html');
-            var savedJokes = document.querySelectorAll('.isThere');
-            var jokeToAdd = parsedHTML.documentElement.querySelector('.isThere');
-            ratedContainer === null || ratedContainer === void 0 ? void 0 : ratedContainer.appendChild(jokeToAdd);
-            if (savedJokes) {
-                Array.from(savedJokes)
-                    .filter(function (jok) { return jok.dataset.id === id_1.toString(); })
-                    .map(function (jokeFiltered) {
-                    var coincidence = document.querySelector("[data-id=\"" + jokeFiltered.dataset.id + "\"]");
-                    if (coincidence) {
-                        var definitiva = coincidence === null || coincidence === void 0 ? void 0 : coincidence.children[0].parentNode;
-                        ratedContainer === null || ratedContainer === void 0 ? void 0 : ratedContainer.removeChild(definitiva);
+    return __awaiter(this, void 0, void 0, function () {
+        var reducer, html, _a, slug, image_original_url, _loop_1, identifier, modalTrigger;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    reducer = function (obj, val) {
+                        if (obj[val.id.toString()] == null) {
+                            obj[val.id.toString()] = __assign({}, val);
+                        }
+                        else {
+                            obj[val.id.toString()] = __assign({ val: val }, val.points);
+                        }
+                        return obj;
+                    };
+                    html = reportedJokes
+                        .map(function (reportedJoke) { return reportedJoke; })
+                        .sort(function (a, b) { return (new Date(a.date) > new Date(b.date) ? -1 : 1); })
+                        .reduce(reducer, []);
+                    return [4 /*yield*/, fetchGifs()];
+                case 1:
+                    _a = _b.sent(), slug = _a.slug, image_original_url = _a.image_original_url;
+                    _loop_1 = function (identifier) {
+                        if (Object.prototype.hasOwnProperty.call(html, identifier)) {
+                            var _c = html[identifier], id_1 = _c.id, joke = _c.joke, points = _c.points;
+                            //aqui es dnde tal
+                            var htmlInDOM = "\n      <div class=\"panel-block is-active isThere\" data-id=\"" + id_1 + "\">\n        <div class=\"dropdown is-hoverable\">\n        <div class=\"dropdown-trigger\">\n          <button\n            class=\"button modalInfo\"\n            aria-haspopup=\"true\"\n            aria-controls=\"dropdown-menu4\"\n          >\n            <span>" + id_1 + "</span>\n            <span class=\"icon is-small\">\n              <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i> \n            </span>\n          </button>\n        </div>\n        <div class=\"dropdown-menu\" id=\"dropdown-menu4\" role=\"menu\">\n          <div class=\"dropdown-content\">\n            <div class=\"dropdown-item\">\n              <p>\n            " + joke + "\n              </p>\n              <span>\u2B50\uFE0F " + points + "</span>\n\n              <img src=" + image_original_url + " alt=" + slug + "/>\n\n              \n            </div>\n          </div>\n        </div>\n        </div>\n        </div>\n        ";
+                            var parsedHTML = new DOMParser().parseFromString(htmlInDOM, 'text/html');
+                            var savedJokes = document.querySelectorAll('.isThere');
+                            var jokeToAdd = parsedHTML.documentElement.querySelector('.isThere');
+                            ratedContainer === null || ratedContainer === void 0 ? void 0 : ratedContainer.appendChild(jokeToAdd);
+                            if (savedJokes) {
+                                Array.from(savedJokes)
+                                    .filter(function (jok) { return jok.dataset.id === id_1.toString(); })
+                                    .map(function (jokeFiltered) {
+                                    var coincidence = document.querySelector("[data-id=\"" + jokeFiltered.dataset.id + "\"]");
+                                    if (coincidence) {
+                                        var definitiva = coincidence === null || coincidence === void 0 ? void 0 : coincidence.children[0].parentNode;
+                                        ratedContainer === null || ratedContainer === void 0 ? void 0 : ratedContainer.removeChild(definitiva);
+                                    }
+                                });
+                            }
+                        }
+                    };
+                    for (identifier in html) {
+                        _loop_1(identifier);
                     }
-                });
+                    modalTrigger = document.querySelectorAll('.modalInfo');
+                    modalTrigger.forEach(function (button) {
+                        button.addEventListener('click', function (e) {
+                            var target = e.target;
+                            var modalContent = target.parentNode.parentNode.parentNode.children[1].textContent;
+                            if (modalContent)
+                                createModal(modalContent);
+                        });
+                    });
+                    return [2 /*return*/];
             }
-        }
-    };
-    for (var identifier in html) {
-        _loop_1(identifier);
-    }
-    var modalTrigger = document.querySelectorAll('.modalInfo');
-    modalTrigger.forEach(function (button) {
-        button.addEventListener('click', function (e) {
-            var target = e.target;
-            var modalContent = target.parentNode.parentNode.parentNode.children[1].textContent;
-            if (modalContent)
-                createModal(modalContent);
         });
     });
 }
 function createModal(modalContent) {
-    var formatedContent = modalContent
-        .trim()
-        .split(' ')
-        .filter(function (content) { return content; });
-    var points = formatedContent.slice(-1)[0];
-    var content = formatedContent.slice(0, -2).join(' ');
-    var html = "<div class=\"modal is-active\">\n  <div class=\"modal-background\"></div>\n  <div class=\"modal-content p-2\">\n  <button class=\"modal-close is-large m-3 modality\" aria-label=\"close\"></button>\n\n " + content + "  \u2B50\uFE0F " + points + "\n  </div>\n</div>";
-    var body = document.querySelector('body');
-    body === null || body === void 0 ? void 0 : body.insertAdjacentHTML('beforeend', html);
-    var modalClose = body === null || body === void 0 ? void 0 : body.querySelector('.modal-close');
-    var modalBackground = body === null || body === void 0 ? void 0 : body.querySelector('.modal-background');
-    modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.addEventListener('click', function () {
-        var _a, _b;
-        (_b = (_a = modalClose === null || modalClose === void 0 ? void 0 : modalClose.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.remove();
-    });
-    modalClose === null || modalClose === void 0 ? void 0 : modalClose.addEventListener('click', function () {
-        var _a, _b;
-        (_b = (_a = modalClose.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.remove();
+    return __awaiter(this, void 0, void 0, function () {
+        var formatedContent, points, content, _a, slug, image_original_url, html, body, modalClose, modalBackground;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    formatedContent = modalContent
+                        .trim()
+                        .split(' ')
+                        .filter(function (content) { return content; });
+                    points = formatedContent.slice(-1)[0];
+                    content = formatedContent.slice(0, -2).join(' ');
+                    return [4 /*yield*/, fetchGifs()];
+                case 1:
+                    _a = _b.sent(), slug = _a.slug, image_original_url = _a.image_original_url;
+                    html = "<div class=\"modal is-active\">\n  <div class=\"modal-background\"></div>\n  <div class=\"modal-content p-2\">\n  <button class=\"modal-close is-large m-3 modality\" aria-label=\"close\"></button>\n\n " + content + "  \u2B50\uFE0F " + points + "\n <img src=" + image_original_url + " alt=" + slug + "/>\n  </div>\n</div>";
+                    body = document.querySelector('body');
+                    body === null || body === void 0 ? void 0 : body.insertAdjacentHTML('beforeend', html);
+                    modalClose = body === null || body === void 0 ? void 0 : body.querySelector('.modal-close');
+                    modalBackground = body === null || body === void 0 ? void 0 : body.querySelector('.modal-background');
+                    modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.addEventListener('click', function () {
+                        var _a, _b;
+                        (_b = (_a = modalClose === null || modalClose === void 0 ? void 0 : modalClose.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.remove();
+                    });
+                    modalClose === null || modalClose === void 0 ? void 0 : modalClose.addEventListener('click', function () {
+                        var _a, _b;
+                        (_b = (_a = modalClose.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.remove();
+                    });
+                    return [2 /*return*/];
+            }
+        });
     });
 }
 function fetchGifs() {
