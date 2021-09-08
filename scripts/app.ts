@@ -376,11 +376,12 @@ async function createModal(modalContent: string): Promise<void> {
 
   const html: string = `<div class="modal is-active">
   <div class="modal-background"></div>
-  <div class="modal-content p-2">
+  <div class="modal-content p-2 is-flex is-flex-direction-column">
   <button class="modal-close is-large m-3 modality" aria-label="close"></button>
 
- ${content}  ⭐️ ${points}
+ ${content}  
  <img src=${image_original_url} alt=${slug}/>
+ <h2 class="points">⭐️ ${points}</h2>
   </div>
 </div>`
 

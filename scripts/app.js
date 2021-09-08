@@ -338,7 +338,7 @@ function createModal(modalContent) {
                     return [4 /*yield*/, fetchGifs()];
                 case 1:
                     _a = _b.sent(), slug = _a.slug, image_original_url = _a.image_original_url;
-                    html = "<div class=\"modal is-active\">\n  <div class=\"modal-background\"></div>\n  <div class=\"modal-content p-2\">\n  <button class=\"modal-close is-large m-3 modality\" aria-label=\"close\"></button>\n\n " + content + "  \u2B50\uFE0F " + points + "\n <img src=" + image_original_url + " alt=" + slug + "/>\n  </div>\n</div>";
+                    html = "<div class=\"modal is-active\">\n  <div class=\"modal-background\"></div>\n  <div class=\"modal-content p-2 is-flex is-flex-direction-column\">\n  <button class=\"modal-close is-large m-3 modality\" aria-label=\"close\"></button>\n\n " + content + "  \n <img src=" + image_original_url + " alt=" + slug + "/>\n <h2 class=\"points\">\u2B50\uFE0F " + points + "</h2>\n  </div>\n</div>";
                     body = document.querySelector('body');
                     body === null || body === void 0 ? void 0 : body.insertAdjacentHTML('beforeend', html);
                     modalClose = body === null || body === void 0 ? void 0 : body.querySelector('.modal-close');

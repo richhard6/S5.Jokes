@@ -1,6 +1,8 @@
 .rated-jokes {
   overflow: scroll;
   position: relative;
+
+  min-width: 100%;
 }
 
 .blockage {
@@ -38,9 +40,14 @@
   position: relative;
 }
 
-.gifs {
-  max-height: 300px;
-  height: 300px;
+.gifs,
+.gif {
+  max-height: 240px;
+  height: 240px;
+}
+
+.points {
+  font-size: 2rem;
 }
 
 .modality {
@@ -56,7 +63,7 @@
 }
 
 .weather {
-  max-height: 240px;
+  max-height: 226px;
 }
 
 .modal-close:hover {
