@@ -70,8 +70,16 @@
   background-color: black;
 }
 
-.dropdown-item > * {
+/* .dropdown-item {
   z-index: 1111;
+} */
+
+.dropdown-content {
+  z-index: 2222;
+}
+
+.tileContainer {
+  margin-bottom: 5rem;
 }
 
 .lds-facebook {
