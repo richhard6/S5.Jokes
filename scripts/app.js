@@ -75,7 +75,6 @@ dropdown === null || dropdown === void 0 ? void 0 : dropdown.addEventListener('c
     dropdown.classList.toggle('is-active');
 });
 document.addEventListener('click', function (e) {
-    console.log(e);
     if (!e.target.classList.contains('selectType')) {
         dropdown === null || dropdown === void 0 ? void 0 : dropdown.classList.remove('is-active');
     }
@@ -181,7 +180,6 @@ function printRandomJoke(selector) {
                     trueBlob = blobsParsed.documentElement.querySelector('svg');
                     blobToAdd = blobs[Math.floor(Math.random() * blobs.length)];
                     checkIfBlob = jokeContainer === null || jokeContainer === void 0 ? void 0 : jokeContainer.children[1];
-                    console.log(checkIfBlob);
                     if (!(jokeContainer === null || jokeContainer === void 0 ? void 0 : jokeContainer.firstChild)) {
                         if (button)
                             button.textContent = 'next';

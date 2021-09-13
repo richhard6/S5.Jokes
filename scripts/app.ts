@@ -37,7 +37,6 @@ dropdown?.addEventListener('click', () => {
 })
 
 document.addEventListener('click', (e) => {
-  console.log(e)
   if (!(e.target as HTMLDivElement).classList.contains('selectType')) {
     dropdown?.classList.remove('is-active')
   }
@@ -160,8 +159,6 @@ async function printRandomJoke(selector: Boolean = true): Promise<void> {
   const blobToAdd = blobs[Math.floor(Math.random() * blobs.length)]
 
   const checkIfBlob = jokeContainer?.children[1]
-
-  console.log(checkIfBlob)
 
   if (!jokeContainer?.firstChild) {
     if (button) button.textContent = 'next'
