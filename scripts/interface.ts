@@ -8,7 +8,7 @@ interface IJoke {
 interface IReport {
   joke: String
   date: string
-  points: Number
+  points: String
   id: string | Number
 }
 
